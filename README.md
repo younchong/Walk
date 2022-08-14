@@ -1,34 +1,13 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 걷다 
+보행자를 위한 신호등 정보 제공과 대기시간없이 목적지로 갈 수 있는 가장 효율적인 길을 안내해주는 모바일에 최적화된 웹사이트입니다.
 
-## Getting Started
+현재 걷다 버전 목표는 
 
-First, run the development server:
+1. 주변 신호등 상태 및 대기 시간 알림
+2. 길찾기시에 유저의 속력과 신호등 대기 상태, 시간등을 고려해서 가장 효율적인 루트 제공
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+개발 시작 22.08.14 - 진행중
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+걸어다니면서 항상 궁금하고 필요하다고 생각했던 정보였는데 공공데이터가 마침내 제공돼서 제작하게 됐다.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+⛔️현재 API가 서울의 특정 지역에서만 제공돼서 앱 또한 제한적으로 제공됩니다.
