@@ -1,8 +1,54 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import { useEffect, useState } from 'react';
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
+  const [mapLoaded, setMapLoaded] = useState<Boolean>(false);
+  const [position, setPosition] = useState({lat:33.450701, lng: 126.570667});
+  
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const cord = pos.coords;
+
+      setPosition({lat: cord.latitude, lng: cord.longitude});
+    }, (err) => {
+      console.log(err);
+    });
+  }, []);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAOMAP_API_KEY}&autoload=false`;
+    script.addEventListener("load", () => setMapLoaded(true));
+   
+    document.head.append(script);
+  }, []);
+
+  useEffect(() => {
+    if (!mapLoaded) return;
+
+    new window.kakao.maps.load(() => {
+      const container = document.querySelector("#map");
+      const options = {
+        center: new window.kakao.maps.LatLng(position.lat, position.lng),
+			  level: 2
+      };
+      const map = new window.kakao.maps.Map(container, options);
+
+      map.panTo(new window.kakao.maps.LatLng(position.lat, position.lng));
+
+      const gpsContent = `<div id="pulse"></div>`;
+      const currentOverlay = new window.kakao.maps.CustomOverlay({
+          position: new window.kakao.maps.LatLng(position.lat, position.lng),
+          content: gpsContent,
+          map: map
+      });
+      currentOverlay.setMap(map);
+    });
+  }, [mapLoaded]);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -11,8 +57,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-      </main>
+    <div id="map" style={{ width: "100vw", height: "100vh"}}></div>
     </div>
   )
 }
