@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@types/react-redux": "^7.1.24",
+    "dotenv": "^16.0.1",
     "next": "^12.2.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
