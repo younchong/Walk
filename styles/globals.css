@@ -70,50 +70,6 @@ table {
 	}
 }
 
-.center {
-	position: relative;
-}
-
-.se {
-	position: absolute;
-	top: .1%;
-	left: .1%;
-
-	width: 15px;
-	height: 15px;
-  margin: 15px;
-  border-style: none;
-  border-radius: 50%;
-  background: purple;
-  cursor: pointer;
-  user-select: none;
-
-  animation-name: signal;
-	animation-duration: 1.5s;
-	animation-iteration-count: infinite;
-	animation-timing-function: linear;
-}
-
-.sw {
-	position: absolute;
-	top: 10px;
-	right: 10px;
-
-	width: 15px;
-	height: 15px;
-  margin: 15px;
-  border-style: none;
-  border-radius: 50%;
-  background: pink;
-  cursor: pointer;
-  user-select: none;
-
-  animation-name: signal;
-	animation-duration: 1.5s;
-	animation-iteration-count: infinite;
-	animation-timing-function: linear;
-}
-
 .signal {
 	position: relative;
 	width: 15px;

@@ -2,6 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import styles from '../styles/Home.module.css'
+import placeSignal from '../utils/placeSignal';
 
 interface position {
   lat: number,
@@ -35,33 +36,11 @@ const Home: NextPage = () => {
         phase,
       }
     });
-    
+
     positions.forEach(position => {
-      //const signalContent = `<div class="signal"></div>`;
-      const signalContent = document.createElement("div");
-      signalContent.classList.add("signal");
       Object.keys(position.phase).forEach(direction => {
-        // 여기서 함수 만들기. 신호등 위치 받고, 받은 위치와 위도 경도 이용해서 customOverlay sjgrl
-        if (direction.includes("se")) {
-          const content = document.createElement("div");
-          content.classList.add("se");
-          signalContent.append(content);
-        }
-
-        if (direction.includes("sw")) {
-          const content = document.createElement("div");
-          content.classList.add("sw");
-          signalContent.append(content);
-        }
+        placeSignal(position, direction, position.phase[direction], map);
       });
-
-      const signalPoint = new window.kakao.maps.CustomOverlay({
-        position: position.latlng,
-        content: signalContent,
-        map,
-      });
-      
-      signalPoint.setMap(map);
     });
   }, [aroundPositions]);
 
@@ -72,7 +51,7 @@ const Home: NextPage = () => {
         body: JSON.stringify(myPosition),
       });
       const response = await data.json();
-console.log(response);
+
       setAroundPositions(response);
     }
 
