@@ -1,17 +1,93 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 import styles from '../styles/Home.module.css'
+
+interface position {
+  lat: number,
+  lng: number,
+}
+
+interface phase {
+  [index: string]: string
+}
 
 const Home: NextPage = () => {
   const [mapLoaded, setMapLoaded] = useState<Boolean>(false);
-  const [position, setPosition] = useState({lat:33.450701, lng: 126.570667});
+  const [map, setMap] = useState();
+  const [myPosition, setMyPosition] = useState<position>({lat:33.450701, lng: 126.570667});
+  const [aroundPositions, setAroundPositions] = useState<position[]>([]);
+
+  useEffect(() => {
+    if (!aroundPositions.length) return;
+
+    const positions = aroundPositions.map((position: any) => {
+      const phase: phase = {};
+
+      Object.keys(position.phase).forEach(key => {
+        if (position.phase[key] && key.includes("Pdsg")) {
+          phase[key] = position.phase[key];
+        }
+      });
+      return {
+        title: position.itstNm,
+        latlng: new window.kakao.maps.LatLng(position.lat, position.lng),
+        phase,
+      }
+    });
+    
+    positions.forEach(position => {
+      //const signalContent = `<div class="signal"></div>`;
+      const signalContent = document.createElement("div");
+      signalContent.classList.add("signal");
+      Object.keys(position.phase).forEach(direction => {
+        // 여기서 함수 만들기. 신호등 위치 받고, 받은 위치와 위도 경도 이용해서 customOverlay sjgrl
+        if (direction.includes("se")) {
+          const content = document.createElement("div");
+          content.classList.add("se");
+          signalContent.append(content);
+        }
+
+        if (direction.includes("sw")) {
+          const content = document.createElement("div");
+          content.classList.add("sw");
+          signalContent.append(content);
+        }
+      });
+
+      const signalPoint = new window.kakao.maps.CustomOverlay({
+        position: position.latlng,
+        content: signalContent,
+        map,
+      });
+      
+      signalPoint.setMap(map);
+    });
+  }, [aroundPositions]);
+
+  useEffect(() => {
+    async function getData() {
+      const data = await fetch("http://localhost:3000/api/signal", {
+        method: "POST",
+        body: JSON.stringify(myPosition),
+      });
+      const response = await data.json();
+console.log(response);
+      setAroundPositions(response);
+    }
+
+    getData();
+  }, [myPosition]);
   
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((pos) => {
       const cord = pos.coords;
+      const newPosition = {
+        lat: cord.latitude,
+        lng: cord.longitude,
+      }
 
-      setPosition({lat: cord.latitude, lng: cord.longitude});
+      setMyPosition(newPosition);
     }, (err) => {
       console.log(err);
     });
@@ -22,7 +98,7 @@ const Home: NextPage = () => {
 
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAOMAP_API_KEY}&autoload=false`;
     script.addEventListener("load", () => setMapLoaded(true));
-   
+
     document.head.append(script);
   }, []);
 
@@ -32,22 +108,24 @@ const Home: NextPage = () => {
     new window.kakao.maps.load(() => {
       const container = document.querySelector("#map");
       const options = {
-        center: new window.kakao.maps.LatLng(position.lat, position.lng),
+        center: new window.kakao.maps.LatLng(myPosition.lat, myPosition.lng),
 			  level: 2
       };
       const map = new window.kakao.maps.Map(container, options);
 
-      map.panTo(new window.kakao.maps.LatLng(position.lat, position.lng));
+      map.panTo(new window.kakao.maps.LatLng(myPosition.lat, myPosition.lng));
 
       const gpsContent = `<div id="pulse"></div>`;
       const currentOverlay = new window.kakao.maps.CustomOverlay({
-          position: new window.kakao.maps.LatLng(position.lat, position.lng),
+          position: new window.kakao.maps.LatLng(myPosition.lat, myPosition.lng),
           content: gpsContent,
           map: map
       });
       currentOverlay.setMap(map);
+      setMap(map);
     });
-  }, [mapLoaded]);
+
+  }, [mapLoaded, myPosition.lat, myPosition.lng]);
 
   return (
     <div className={styles.container}>

@@ -10,7 +10,7 @@
     "core-js-pure" "^3.20.2"
     "regenerator-runtime" "^0.13.4"
 
-"@babel/runtime@^7.10.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.18.9", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.10.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.18.9", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2":
   "integrity" "sha512-lkqXDcvlFT5rvEjiu6+QYO+1GXrEHRo2LOtS7E4GtX5ESIZOgepqsZBVIj6Pv+a6zqsya9VCgiK1KAK4BvJDAw=="
   "resolved" "https://registry.npmjs.org/@babel/runtime/-/runtime-7.18.9.tgz"
   "version" "7.18.9"
@@ -101,14 +101,6 @@
   dependencies:
     "tslib" "^2.4.0"
 
-"@types/hoist-non-react-statics@^3.3.0":
-  "integrity" "sha512-iMIqiko6ooLrTh1joXodJK5X9xeEALT1kM5G3ZLhD3hszxBdIEd5C75U834D9mLcINgD4OyZf5uQXjkuYydWvA=="
-  "resolved" "https://registry.npmjs.org/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.1.tgz"
-  "version" "3.3.1"
-  dependencies:
-    "@types/react" "*"
-    "hoist-non-react-statics" "^3.3.0"
-
 "@types/json5@^0.0.29":
   "integrity" "sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ=="
   "resolved" "https://registry.npmjs.org/@types/json5/-/json5-0.0.29.tgz"
@@ -130,16 +122,6 @@
   "version" "18.0.6"
   dependencies:
     "@types/react" "*"
-
-"@types/react-redux@^7.1.24":
-  "integrity" "sha512-7FkurKcS1k0FHZEtdbbgN8Oc6b+stGSfZYjQGicofJ0j4U0qIn/jaSvnP2pLwZKiai3/17xqqxkkrxTgN8UNbQ=="
-  "resolved" "https://registry.npmjs.org/@types/react-redux/-/react-redux-7.1.24.tgz"
-  "version" "7.1.24"
-  dependencies:
-    "@types/hoist-non-react-statics" "^3.3.0"
-    "@types/react" "*"
-    "hoist-non-react-statics" "^3.3.0"
-    "redux" "^4.0.0"
 
 "@types/react@*", "@types/react@18.0.17":
   "integrity" "sha512-38ETy4tL+rn4uQQi7mB81G7V1g0u2ryquNmsVIOKUAEIDK+3CUjZ6rSRpdvS99dNBnkLFL83qfmtLacGOTIhwQ=="
@@ -905,6 +887,11 @@
   "resolved" "https://registry.npmjs.org/grapheme-splitter/-/grapheme-splitter-1.0.4.tgz"
   "version" "1.0.4"
 
+"hamt_plus@1.0.2":
+  "integrity" "sha512-t2JXKaehnMb9paaYA7J0BX8QQAY8lwfQ9Gjf4pg/mk4krt+cmwmU652HOoWonf+7+EQV97ARPMhhVgU1ra2GhA=="
+  "resolved" "https://registry.npmjs.org/hamt_plus/-/hamt_plus-1.0.2.tgz"
+  "version" "1.0.2"
+
 "has-bigints@^1.0.1", "has-bigints@^1.0.2":
   "integrity" "sha512-tSvCKtBr9lkF0Ex0aQiP9N+OpV4zi2r/Nee5VkRDbaqv35RLYMzbwQfFSZZH0kR+Rd6302UJZ2p/bJCEoR3VoQ=="
   "resolved" "https://registry.npmjs.org/has-bigints/-/has-bigints-1.0.2.tgz"
@@ -940,13 +927,6 @@
   "version" "1.0.3"
   dependencies:
     "function-bind" "^1.1.1"
-
-"hoist-non-react-statics@^3.3.0":
-  "integrity" "sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw=="
-  "resolved" "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz"
-  "version" "3.3.2"
-  dependencies:
-    "react-is" "^16.7.0"
 
 "ignore@^5.2.0":
   "integrity" "sha512-CmxgYGiEPCLhfLnpPp1MoRmifwEIOgjcHXxOBjv7mY96c+eWScsOP9c112ZyLdWHi0FxHjI+4uVhKYp/gcdRmQ=="
@@ -1457,7 +1437,7 @@
     "loose-envify" "^1.1.0"
     "scheduler" "^0.23.0"
 
-"react-is@^16.13.1", "react-is@^16.7.0":
+"react-is@^16.13.1":
   "integrity" "sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ=="
   "resolved" "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
   "version" "16.13.1"
@@ -1471,19 +1451,19 @@
     "broadcast-channel" "^3.4.1"
     "match-sorter" "^6.0.2"
 
-"react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^17.0.2 || ^18.0.0-0", "react@^18.2.0", "react@>= 16.8.0 || 17.x.x || ^18.0.0-0":
+"react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^17.0.2 || ^18.0.0-0", "react@^18.2.0", "react@>= 16.8.0 || 17.x.x || ^18.0.0-0", "react@>=16.13.1":
   "integrity" "sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ=="
   "resolved" "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
   "version" "18.2.0"
   dependencies:
     "loose-envify" "^1.1.0"
 
-"redux@^4.0.0":
-  "integrity" "sha512-oSBmcKKIuIR4ME29/AeNUnl5L+hvBq7OaJWzaptTQJAntaPvxIJqfnjbaEiCzzaIz+XmVILfqAM3Ob0aXLPfjA=="
-  "resolved" "https://registry.npmjs.org/redux/-/redux-4.2.0.tgz"
-  "version" "4.2.0"
+"recoil@^0.7.5":
+  "integrity" "sha512-GVShsj5+M/2GULWBs5WBJGcsNis/d3YvDiaKjYh3mLKXftjtmk9kfaQ8jwjoIXySCwn8/RhgJ4Sshwgzj2UpFA=="
+  "resolved" "https://registry.npmjs.org/recoil/-/recoil-0.7.5.tgz"
+  "version" "0.7.5"
   dependencies:
-    "@babel/runtime" "^7.9.2"
+    "hamt_plus" "1.0.2"
 
 "regenerator-runtime@^0.13.4":
   "integrity" "sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA=="

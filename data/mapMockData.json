@@ -1,0 +1,19 @@
+[
+  {
+    "itstId":"33049",
+    "itstNm":"(구)역삼세무서(연등)2",
+    "mapCtptIntLat":3.7494462E8,
+    "mapCtptIntLot":1.270399322E9,
+    "laneWidth":270.0,
+    "limitSpedTypeNm":"vehicleMaxSpeed, vehicleMaxSpeed",
+    "limitSped":"416, 833",
+    "itstEngNm":"(gu)yeoksamsemuseo(sub2)",
+    "rgtrId":"V2X",
+    "regDt":"2022-08-10T16:30:40.000+00:00"
+  },
+  {"itstId":"173","itstNm":"영동전화국","mapCtptIntLat":3.75050323E8,"mapCtptIntLot":1.270416266E9,"laneWidth":288.0,"limitSpedTypeNm":"vehicleMaxSpeed","limitSped":"833","itstEngNm":"YoungDongjeonhwaguk","rgtrId":"V2X","regDt":"2022-08-10T16:30:40.000+00:00"},
+  {"itstId":"2987","itstNm":"개포경남아파트","mapCtptIntLat":3.7483127E8,"mapCtptIntLot":1.270526716E9,"laneWidth":265.0,"limitSpedTypeNm":"vehicleMaxSpeed, vehicleMaxSpeed","limitSped":"416, 833","itstEngNm":"GaePokyungnamapateu","rgtrId":"V2X","regDt":"2022-08-10T16:30:40.000+00:00"},
+  {"itstId":"2290","itstNm":"선릉공원앞","mapCtptIntLat":3.75070125E8,"mapCtptIntLot":1.270471447E9,"laneWidth":298.0,"limitSpedTypeNm":"vehicleMaxSpeed, vehicleMaxSpeed","limitSped":"416, 833","itstEngNm":"SunReunggongwonap","rgtrId":"V2X","regDt":"2022-08-10T16:30:40.000+00:00"},
+  {"itstId":"2961","itstNm":"대모산입구역","mapCtptIntLat":3.7491418E8,"mapCtptIntLot":1.270727197E9,"laneWidth":274.0,"limitSpedTypeNm":"vehicleMaxSpeed, vehicleMaxSpeed","limitSped":"416, 694","itstEngNm":null,"rgtrId":"V2X","regDt":"2022-08-10T16:30:40.000+00:00"},
+  {"itstId":"655","itstNm":"강남동산교회","mapCtptIntLat":3.74793599E8,"mapCtptIntLot":1.270507627E9,"laneWidth":297.0,"limitSpedTypeNm":"vehicleMaxSpeed","limitSped":"416","itstEngNm":"KangNamdongsankyohoi","rgtrId":"V2X","regDt":"2022-08-10T16:30:40.000+00:00"}
+]
