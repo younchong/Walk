@@ -1,19 +1,15 @@
 [
-  {
-    "itstId":"33049",
-    "itstNm":"(구)역삼세무서(연등)2",
-    "mapCtptIntLat":3.7494462E8,
-    "mapCtptIntLot":1.270399322E9,
-    "laneWidth":270.0,
-    "limitSpedTypeNm":"vehicleMaxSpeed, vehicleMaxSpeed",
-    "limitSped":"416, 833",
-    "itstEngNm":"(gu)yeoksamsemuseo(sub2)",
-    "rgtrId":"V2X",
-    "regDt":"2022-08-10T16:30:40.000+00:00"
-  },
-  {"itstId":"173","itstNm":"영동전화국","mapCtptIntLat":3.75050323E8,"mapCtptIntLot":1.270416266E9,"laneWidth":288.0,"limitSpedTypeNm":"vehicleMaxSpeed","limitSped":"833","itstEngNm":"YoungDongjeonhwaguk","rgtrId":"V2X","regDt":"2022-08-10T16:30:40.000+00:00"},
-  {"itstId":"2987","itstNm":"개포경남아파트","mapCtptIntLat":3.7483127E8,"mapCtptIntLot":1.270526716E9,"laneWidth":265.0,"limitSpedTypeNm":"vehicleMaxSpeed, vehicleMaxSpeed","limitSped":"416, 833","itstEngNm":"GaePokyungnamapateu","rgtrId":"V2X","regDt":"2022-08-10T16:30:40.000+00:00"},
-  {"itstId":"2290","itstNm":"선릉공원앞","mapCtptIntLat":3.75070125E8,"mapCtptIntLot":1.270471447E9,"laneWidth":298.0,"limitSpedTypeNm":"vehicleMaxSpeed, vehicleMaxSpeed","limitSped":"416, 833","itstEngNm":"SunReunggongwonap","rgtrId":"V2X","regDt":"2022-08-10T16:30:40.000+00:00"},
-  {"itstId":"2961","itstNm":"대모산입구역","mapCtptIntLat":3.7491418E8,"mapCtptIntLot":1.270727197E9,"laneWidth":274.0,"limitSpedTypeNm":"vehicleMaxSpeed, vehicleMaxSpeed","limitSped":"416, 694","itstEngNm":null,"rgtrId":"V2X","regDt":"2022-08-10T16:30:40.000+00:00"},
-  {"itstId":"655","itstNm":"강남동산교회","mapCtptIntLat":3.74793599E8,"mapCtptIntLot":1.270507627E9,"laneWidth":297.0,"limitSpedTypeNm":"vehicleMaxSpeed","limitSped":"416","itstEngNm":"KangNamdongsankyohoi","rgtrId":"V2X","regDt":"2022-08-10T16:30:40.000+00:00"}
+  {"itstId":"21219","itstNm":"홍대역2번출구(연등)","mapCtptIntLat":3.75572065E8,"mapCtptIntLot":1.269242219E9,"laneWidth":287.0,"limitSpedTypeNm":"vehicleMaxSpeed","limitSped":"833","itstEngNm":null,"rgtrId":"V2X","regDt":"2022-09-08T16:30:22.000+00:00"},
+  {"itstId":"215","itstNm":"디지털미디어씨티역","mapCtptIntLat":3.75781848E8,"mapCtptIntLot":1.269017242E9,"laneWidth":297.0,"limitSpedTypeNm":"vehicleMaxSpeed, vehicleMaxSpeed","limitSped":"694, 833","itstEngNm":null,"rgtrId":"V2X","regDt":"2022-09-08T16:30:22.000+00:00"},{"itstId":"2151","itstNm":"한마을아파트","mapCtptIntLat":3.74966358E8,"mapCtptIntLot":1.268627629E9,"laneWidth":null,"limitSpedTypeNm":null,"limitSped":null,"itstEngNm":null,"rgtrId":"V2X","regDt":"2022-09-08T16:30:22.000+00:00"},
+  {"itstId":"2231","itstNm":"월드컵파크207동","mapCtptIntLat":3.75759707E8,"mapCtptIntLot":1.268911531E9,"laneWidth":298.0,"limitSpedTypeNm":"maxSpeedInSchoolZone","limitSped":"694","itstEngNm":null,"rgtrId":"V2X","regDt":"2022-09-08T16:30:22.000+00:00"},
+  {"itstId":"22415","itstNm":"가좌삼거리(연등)","mapCtptIntLat":3.7569886E8,"mapCtptIntLot":1.269135727E9,"laneWidth":294.0,"limitSpedTypeNm":"vehicleMaxSpeed","limitSped":"833","itstEngNm":null,"rgtrId":"V2X","regDt":"2022-09-08T16:30:22.000+00:00"},
+  {"itstId":"23185","itstNm":"상암MBC(연등)","mapCtptIntLat":3.75816071E8,"mapCtptIntLot":1.268915058E9,"laneWidth":259.0,"limitSpedTypeNm":"vehicleMaxSpeed","limitSped":"833","itstEngNm":null,"rgtrId":"V2X","regDt":"2022-09-08T16:30:22.000+00:00"},
+  {"itstId":"23591","itstNm":"DMC첨단산업센터(연등)","mapCtptIntLat":3.75858225E8,"mapCtptIntLot":1.268855754E9,"laneWidth":297.0,"limitSpedTypeNm":"vehicleMaxSpeed,vehicleMaxSpeed","limitSped":"833,416","itstEngNm":null,"rgtrId":"V2X","regDt":"2022-09-08T16:30:22.000+00:00"},
+  {"itstId":"23600","itstNm":"디지털미디어시티(연등)","mapCtptIntLat":3.7579326E8,"mapCtptIntLot":1.26891709E9,"laneWidth":290.0,"limitSpedTypeNm":"vehicleMaxSpeed","limitSped":"833","itstEngNm":null,"rgtrId":"V2X","regDt":"2022-09-08T16:30:22.000+00:00"},
+  {"itstId":"23611","itstNm":"월드컵파크1단지(연등)","mapCtptIntLat":3.75762762E8,"mapCtptIntLot":1.268938987E9,"laneWidth":303.0,"limitSpedTypeNm":"vehicleMaxSpeed, vehicleMaxSpeed","limitSped":"833, 694","itstEngNm":null,"rgtrId":"V2X","regDt":"2022-09-08T16:30:22.000+00:00"},
+  {"itstId":"2408","itstNm":"DMC래미안","mapCtptIntLat":3.75716565E8,"mapCtptIntLot":1.269099869E9,"laneWidth":288.0,"limitSpedTypeNm":"vehicleMaxSpeed","limitSped":"833","itstEngNm":null,"rgtrId":"V2X","regDt":"2022-09-08T16:30:22.000+00:00"},
+  {"itstId":"2415","itstNm":"가좌삼거리","mapCtptIntLat":3.75702542E8,"mapCtptIntLot":1.269128792E9,"laneWidth":300.0,"limitSpedTypeNm":"vehicleMaxSpeed","limitSped":"833","itstEngNm":null,"rgtrId":"V2X","regDt":"2022-09-08T16:30:22.000+00:00"},
+  {"itstId":"3617","itstNm":"상암사거리","mapCtptIntLat":3.75733958E8,"mapCtptIntLot":1.26898846E9,"laneWidth":294.0,"limitSpedTypeNm":"vehicleMaxSpeed","limitSped":"833","itstEngNm":null,"rgtrId":"V2X","regDt":"2022-09-08T16:30:22.000+00:00"},
+  {"itstId":"3599","itstNm":"월드컵파크5단지","mapCtptIntLat":3.75798174E8,"mapCtptIntLot":1.268878838E9,"laneWidth":269.0,"limitSpedTypeNm":"vehicleMaxSpeed","limitSped":"833","itstEngNm":null,"rgtrId":"V2X","regDt":"2022-09-08T16:30:22.000+00:00"},
+  {"itstId":"3590","itstNm":"월드컵파크7단지","mapCtptIntLat":3.75832774E8,"mapCtptIntLot":1.268820502E9,"laneWidth":289.0,"limitSpedTypeNm":"vehicleMaxSpeed","limitSped":"833","itstEngNm":null,"rgtrId":"V2X","regDt":"2022-09-08T16:30:22.000+00:00"}
 ]

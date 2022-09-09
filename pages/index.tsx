@@ -13,6 +13,10 @@ interface phase {
   [index: string]: string
 }
 
+interface timing {
+  [index: string]: number
+}
+
 const Home: NextPage = () => {
   const [mapLoaded, setMapLoaded] = useState<Boolean>(false);
   const [map, setMap] = useState();
@@ -24,19 +28,28 @@ const Home: NextPage = () => {
 
     const positions = aroundPositions.map((position: any) => {
       const phase: phase = {};
+      const timing: timing = {};
 
-      Object.keys(position.phase).forEach(key => {
+      position.phase && Object.keys(position.phase).forEach(key => {
         if (position.phase[key] && key.includes("Pdsg")) {
           phase[key] = position.phase[key];
         }
       });
+
+      position.timing && Object.keys(position.timing).forEach(key => {
+        if (position.timing[key] && key.includes("Pdsg")) {
+          timing[key] = position.timing[key];
+        }
+      });
+
       return {
         title: position.itstNm,
         latlng: new window.kakao.maps.LatLng(position.lat, position.lng),
         phase,
+        timing,
       }
     });
-
+console.log(positions);
     positions.forEach(position => {
       Object.keys(position.phase).forEach(direction => {
         placeSignal(position, direction, position.phase[direction], map);
@@ -114,7 +127,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-    <div id="map" style={{ width: "100vw", height: "100vh"}}></div>
+      <div id="map" style={{ width: "100vw", height: "100vh"}}></div>
     </div>
   )
 }
