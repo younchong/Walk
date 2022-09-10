@@ -38,7 +38,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) {
-  const myPosition = await JSON.parse(req.body);
+  const standardPosition = await JSON.parse(req.body);
   const mapData = await getMapData(); // 현재 위치에서 주변에 있는 위도 경도 가져옴.
   const signalPhase = await getSignalPhaseData(); // signal phase info
   const signalTiming = await getSignalTimingData();
@@ -49,7 +49,7 @@ export default async function handler(
       lng: data.mapCtptIntLot / 10000000,
     }
 
-    if (getDistance(myPosition, signalPosition) < 20) {
+    if (getDistance(standardPosition, signalPosition) <= 2) {
       const phase = signalPhase.find((signal: any) => signal.itstId === data.itstId);
       const timing = signalTiming.find((signal: any) => signal.itstId === data.itstId);
 

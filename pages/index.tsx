@@ -6,31 +6,56 @@ import SignalList from '../Components/SignalList';
 import myPositionState from '../recoil/myPosition/atom';
 import { aroundSignalsAtom } from '../recoil/aroundSignals/atom';
 import filterSignals from '../utils/filterSignals';
+import mapPositionAtom from '../recoil/mapPosition/atom';
+import getDistance from '../utils/getDistance';
+import mapMovingAtom from '../recoil/mapMoving/atom';
+import getSignalData from '../utils/getSignalData';
+import placeSignal from '../utils/placeSignal';
 
 const Home: NextPage = () => {
   const [myPosition, setMyPosition] = useRecoilState(myPositionState);
+  const [mapPosition, setMapPosition] = useRecoilState(mapPositionAtom);
+  const [isMapMoving, setIsMapMoving] = useRecoilState(mapMovingAtom);
   const setAroundSignals = useSetRecoilState(aroundSignalsAtom);
   const [mapLoaded, setMapLoaded] = useState<boolean>(false);
   const [map, setMap] = useState();
 
   useEffect(() => {
-    async function getData() {
-      const data = await fetch("http://localhost:3000/api/signal", {
-        method: "POST",
-        body: JSON.stringify(myPosition),
-      });
-      const response = await data.json();
+    getDistance(myPosition, mapPosition) > 0.5 ?
+    setIsMapMoving(true) :
+    setIsMapMoving(false);
+  }, [mapPosition]);
+
+  useEffect(() => {
+    if (!isMapMoving) return;
+
+    (async() => {
+      const response = await getSignalData(mapPosition);
 
       if (!response.length) return;
 
       const filteredSignals = filterSignals(response);
 
-      setAroundSignals(filteredSignals as any);
-    }
+      filteredSignals.forEach((position: any) => {
+        Object.keys(position.phase).forEach(direction => {
+          placeSignal(position, direction, position.phase[direction], map);
+        });
+      });
+    })();
+  }, [isMapMoving, mapPosition]);
 
-    getData();
-  }, [myPosition]);
+  useEffect(() => {
+    (async() => {
+      const response = await getSignalData(myPosition);
+
+      if (!response.length) return;
   
+      const filteredSignals = filterSignals(response);
+  
+      setAroundSignals(filteredSignals as any);
+    })();
+  }, [myPosition]);
+
   useEffect(() => {
     if (!mapLoaded) return;
 
@@ -53,6 +78,16 @@ const Home: NextPage = () => {
 
       currentOverlay.setMap(map);
       setMap(map);
+
+      new window.kakao.maps.event.addListener(map, "dragend", () => {
+        const center = map.getCenter();
+        const position = {
+          lat: center.getLat(),
+          lng: center.getLng(),
+        };
+
+        setMapPosition(position);
+      });
     });
   }, [mapLoaded, myPosition.lat, myPosition.lng]);
 
