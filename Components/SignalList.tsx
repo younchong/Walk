@@ -1,6 +1,9 @@
 import styled from '@emotion/styled';
 import React, { FC, useEffect, useState } from "react";
+import { useRecoilValue } from 'recoil';
 import { translateDirection, translatePhase } from '../utils/signalUtils';
+import aroundSignalsAtom from '../recoil/aroundSignals/atom';
+import placeSignal from '../utils/placeSignal';
 
 interface ContainerProps {
   isActive: boolean;
@@ -100,14 +103,14 @@ interface signal {
 }
 
 interface Props {
-  signals: signal[]
+  map: any
 }
 
 interface ranges {
   [index: string]: boolean
 }
 
-export const SignalList: FC<Props> = ({signals}) => {
+export const SignalList: FC<Props> = ({ map }) => {
   const [ranges, setRanges] = useState<ranges>({
     0.5: true,
     1: false,
@@ -115,26 +118,37 @@ export const SignalList: FC<Props> = ({signals}) => {
     2: false
   });
   const [isActive, setIsActive] = useState<boolean>(false);
+  const aroundSignals = useRecoilValue(aroundSignalsAtom);
 
   const handleRange = (e: React.BaseSyntheticEvent) => {
-    const id = e.target.id;
+    const curRange = e.target.id;
 
-    if (!id) return;
+    if (!curRange) return;
 
     const prevRange = Object.keys(ranges).find(range => ranges[range]);
 
     setRanges(prev => {
       const updatedRanges = {...prev};
       updatedRanges[prevRange as string] = false;
-      updatedRanges[id] = true;
+      updatedRanges[curRange] = true;
 
       return updatedRanges;
     });
   }
 
+  useEffect(() => {
+    if (!aroundSignals.length) return;
+  
+    aroundSignals.forEach((position: any) => {
+      Object.keys(position.phase).forEach(direction => {
+        placeSignal(position, direction, position.phase[direction], map);
+      });
+    });
+  }, [aroundSignals]);
+
   return (
     <ListContainer isActive={isActive}>
-      <ListMarginTop hasSignals={signals.length ? true : false}/>
+      <ListMarginTop hasSignals={aroundSignals.length ? true : false}/>
       <List onMouseOver={() => {setIsActive(true)}} onMouseOut={() => {setIsActive(false)}} >
         <ListHeader>
           <span>주변 정보</span>
@@ -146,7 +160,7 @@ export const SignalList: FC<Props> = ({signals}) => {
         </ListHeader>
         <ListMain>
           {
-            signals.map((signal, index) => {
+            aroundSignals.map((signal: signal) => {
               return (
                 <ListItem key={signal.title}>
                   <ItemTitle key={signal.title + "header"}>{signal.title}</ItemTitle>
