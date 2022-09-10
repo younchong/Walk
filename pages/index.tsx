@@ -3,12 +3,12 @@ import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import SignalList from '../Components/SignalList';
-import myPositionAtom from '../recoil/myPosition/atom';
-import aroundSignalsAtom from '../recoil/aroundSignals/atom';
+import myPositionState from '../recoil/myPosition/atom';
+import { aroundSignalsAtom } from '../recoil/aroundSignals/atom';
 import filterSignals from '../utils/filterSignals';
 
 const Home: NextPage = () => {
-  const [myPosition, setMyPosition] = useRecoilState(myPositionAtom);
+  const [myPosition, setMyPosition] = useRecoilState(myPositionState);
   const setAroundSignals = useSetRecoilState(aroundSignalsAtom);
   const [mapLoaded, setMapLoaded] = useState<boolean>(false);
   const [map, setMap] = useState();

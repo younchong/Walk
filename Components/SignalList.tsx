@@ -1,9 +1,10 @@
 import styled from '@emotion/styled';
 import React, { FC, useEffect, useState } from "react";
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { translateDirection, translatePhase } from '../utils/signalUtils';
-import aroundSignalsAtom from '../recoil/aroundSignals/atom';
+import { distanceAtom } from '../recoil/aroundSignals/atom';
 import placeSignal from '../utils/placeSignal';
+import signalWithCalculatedDistance from '../recoil/aroundSignals/withCalculated';
 
 interface ContainerProps {
   isActive: boolean;
@@ -95,7 +96,7 @@ const ItemTitle = styled.span`
 
 const ItemDetails = styled.div``;
 
-interface signal {
+export interface signal {
   title: string,
   timing: {[index: string]: number},
   phase: {[index: string]: string},
@@ -111,14 +112,15 @@ interface ranges {
 }
 
 export const SignalList: FC<Props> = ({ map }) => {
+  const aroundSignals = useRecoilValue(signalWithCalculatedDistance);
+  const setDistance = useSetRecoilState(distanceAtom);
+  const [isActive, setIsActive] = useState<boolean>(false);
   const [ranges, setRanges] = useState<ranges>({
     0.5: true,
     1: false,
     1.5: false,
     2: false
   });
-  const [isActive, setIsActive] = useState<boolean>(false);
-  const aroundSignals = useRecoilValue(aroundSignalsAtom);
 
   const handleRange = (e: React.BaseSyntheticEvent) => {
     const curRange = e.target.id;
@@ -127,6 +129,7 @@ export const SignalList: FC<Props> = ({ map }) => {
 
     const prevRange = Object.keys(ranges).find(range => ranges[range]);
 
+    setDistance(curRange);
     setRanges(prev => {
       const updatedRanges = {...prev};
       updatedRanges[prevRange as string] = false;
