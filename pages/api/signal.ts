@@ -49,7 +49,7 @@ export default async function handler(
       lng: data.mapCtptIntLot / 10000000,
     }
 
-    if (getDistance(myPosition, signalPosition) < 50) {
+    if (getDistance(myPosition, signalPosition) < 20) {
       const phase = signalPhase.find((signal: any) => signal.itstId === data.itstId);
       const timing = signalTiming.find((signal: any) => signal.itstId === data.itstId);
 

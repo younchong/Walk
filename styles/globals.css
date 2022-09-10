@@ -42,31 +42,31 @@ table {
 	border-spacing: 0;
 }
 
-#pulse {
+#me {
 	width: 15px;
 	height: 15px;
   margin: 15px;
   border-style: none;
   border-radius: 50%;
-  background: red;
+  background: #00B8FF;
   cursor: pointer;
   user-select: none;
 
-  animation-name: pulse;
+  animation-name: mine;
 	animation-duration: 1.5s;
 	animation-iteration-count: infinite;
 	animation-timing-function: linear;
 }
 
-@keyframes pulse{
+@keyframes mine {
 	0%{
-		box-shadow: 0px 0px 5px 0px rgba(173,0,0,.3);
+		box-shadow: 0px 0px 5px 0px rgba(0, 184, 255, .3);
 	}
 	65%{
-		box-shadow: 0px 0px 5px 13px rgba(173,0,0,.3);
+		box-shadow: 0px 0px 5px 13px rgba(0, 184, 255, .3);
 	}
 	90%{
-		box-shadow: 0px 0px 5px 13px rgba(173,0,0,0);
+		box-shadow: 0px 0px 5px 13px rgba(0, 184, 255, 0);
 	}
 }
 
@@ -81,7 +81,7 @@ table {
   cursor: pointer;
   user-select: none;
 
-  animation-name: signal;
+  animation-name: greenLight;
 	animation-duration: 1.5s;
 	animation-iteration-count: infinite;
 	animation-timing-function: linear;
@@ -90,18 +90,30 @@ table {
 .off {
 	background: red;
 	
-	animation-name: pulse;
+	animation-name: stopLight;
 	animation-duration: 1.5s;
 	animation-iteration-count: infinite;
 	animation-timing-function: linear;
 }
 
-@keyframes signal{
+@keyframes greenLight{
 	0%{
 		box-shadow: 0px 0px 5px 0px rgba(45,201,55, .3);
 	}
 	65%{
 		box-shadow: 0px 0px 5px 13px rgba(45,201,55, .3);
+	}
+	90%{
+		box-shadow: 0px 0px 5px 13px rgba(173,0,0,0);
+	}
+}
+
+@keyframes stopLight {
+	0%{
+		box-shadow: 0px 0px 5px 0px rgba(173,0,0,.3);
+	}
+	65%{
+		box-shadow: 0px 0px 5px 13px rgba(173,0,0,.3);
 	}
 	90%{
 		box-shadow: 0px 0px 5px 13px rgba(173,0,0,0);

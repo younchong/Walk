@@ -117,7 +117,7 @@ const Home: NextPage = () => {
 
       map.panTo(new window.kakao.maps.LatLng(myPosition.lat, myPosition.lng));
 
-      const gpsContent = `<div id="pulse"></div>`;
+      const gpsContent = `<div id="me"></div>`;
       const currentOverlay = new window.kakao.maps.CustomOverlay({
           position: new window.kakao.maps.LatLng(myPosition.lat, myPosition.lng),
           content: gpsContent,
