@@ -5,4 +5,9 @@ const aroundSignalsAtom = atom({
   default: []
 });
 
-export default aroundSignalsAtom;
+const distanceAtom = atom({
+  key: "distanceAtom",
+  default: 0.5,
+});
+
+export { aroundSignalsAtom, distanceAtom };
