@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import React, { FC, useEffect, useState } from "react";
+import { translateDirection, translatePhase } from '../utils/signalUtils';
 
 interface ContainerProps {
   isActive: boolean;
@@ -63,6 +64,10 @@ const RangeItem = styled.span<RangeItem>`
   color: ${(props) => (props.isClicked ? "#ffffff" : "none")};
   background-color: ${(props) => (props.isClicked ? "#00B8FF" : "none")};
   transition: .5s ease-in-out;
+
+  &:hover{
+    cursor: pointer;
+  }
 `
 
 const ListMain = styled.main`
@@ -79,6 +84,13 @@ const ListItem = styled.article`
     margin-right: 10px;
   }
 `;
+
+const ItemTitle = styled.span`
+  font-size: 20px;
+  font-weight: 500;
+`
+
+const ItemDetails = styled.div``;
 
 interface signal {
   title: string,
@@ -103,6 +115,7 @@ export const SignalList: FC<Props> = ({signals}) => {
     2: false
   });
   const [isActive, setIsActive] = useState<boolean>(false);
+
   const handleRange = (e: React.BaseSyntheticEvent) => {
     const id = e.target.id;
 
@@ -136,13 +149,13 @@ export const SignalList: FC<Props> = ({signals}) => {
             signals.map((signal, index) => {
               return (
                 <ListItem key={signal.title}>
-                  <span key={signal.title + "header"}>{signal.title}</span>
+                  <ItemTitle key={signal.title + "header"}>{signal.title}</ItemTitle>
                   {Object.keys(signal.phase).map(direction => {
                     return (
-                      <div key={direction}>
+                      <ItemDetails key={direction}>
                         <span key={direction + signal.title + signal.timing}>{translateDirection(direction, signal.timing)}</span>
                         <span key={direction + signal.title + signal.phase[direction]}>{translatePhase(signal.phase[direction])}</span>
-                      </div>
+                      </ItemDetails>
                     );
                   })}
                 </ListItem>
@@ -156,44 +169,3 @@ export const SignalList: FC<Props> = ({signals}) => {
 }
 
 export default SignalList;
-
-function translateDirection(direction: string, timing: {[index: string]: number}) {
-  if (direction.includes("nt")) {
-    return `북쪽 ${Math.floor(timing["ntPdsgRmdrCs"] / 10)}초`;
-  }
-
-  if (direction.includes("et")) {
-    return `동쪽 ${Math.floor(timing["etPdsgRmdrCs"] / 10)}초`;
-  }
-
-  if (direction.includes("st")) {
-    return `남쪽 ${Math.floor(timing["stPdsgRmdrCs"] / 10)}초`;
-  }
-
-  if (direction.includes("wt")) {
-    return `서쪽 ${Math.floor(timing["wtPdsgRmdrCs"] / 10)}초`;
-  }
-
-  if (direction.includes("ne")) {
-    return `북동쪽 ${Math.floor(timing["nePdsgRmdrCs"] / 10)}초`;
-  }
-
-  if (direction.includes("nw")) {
-    return `북서쪽 ${Math.floor(timing["nwPdsgRmdrCs"] / 10)}초`;
-  }
-
-  if (direction.includes("se")) {
-    return `남동쪽 ${Math.floor(timing["sePdsgRmdrCs"] / 10)}초`;
-  }
-
-  if (direction.includes("sw")) {
-    return `남서쪽 ${Math.floor(timing["swPdsgRmdrCs"] / 10)}초`;
-  }
-
-  return "정보 없음";
-}
-
-function translatePhase(phase: string) {
-  if (phase.includes("stop")) return "🔴";
-  return "🟢";
-}
