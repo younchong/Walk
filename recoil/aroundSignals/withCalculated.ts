@@ -10,8 +10,6 @@ const signalWithCalculatedDistance = selector({
     const myPosition = get(myPositionState);
     const signals = get(aroundSignalsAtom);
     const distance = get(distanceAtom);
-
-    const calculatedDistanceSignals = [];
     
     return signals.filter((signal: signal) => {
       const signalPosition = {

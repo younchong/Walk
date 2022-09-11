@@ -2,12 +2,19 @@ import { atom } from "recoil";
 
 const aroundSignalsAtom = atom({
   key: "aroundSignals",
-  default: []
+  default: [],
+  dangerouslyAllowMutability: true,
 });
 
-const distanceAtom = atom({
+const distanceAtom = atom<number>({
   key: "distanceAtom",
   default: 0.5,
 });
 
-export { aroundSignalsAtom, distanceAtom };
+const mapAroundSignalsAtom = atom<any[]>({
+  key: "mapAroundSignals",
+  default: [],
+  dangerouslyAllowMutability: true,
+});
+
+export { aroundSignalsAtom, distanceAtom, mapAroundSignalsAtom };

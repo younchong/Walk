@@ -4,18 +4,20 @@ import { useEffect, useState } from 'react'
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import SignalList from '../Components/SignalList';
 import myPositionState from '../recoil/myPosition/atom';
-import { aroundSignalsAtom } from '../recoil/aroundSignals/atom';
+import { aroundSignalsAtom, mapAroundSignalsAtom } from '../recoil/aroundSignals/atom';
 import filterSignals from '../utils/filterSignals';
 import mapPositionAtom from '../recoil/mapPosition/atom';
 import getDistance from '../utils/getDistance';
 import mapMovingAtom from '../recoil/mapMoving/atom';
 import getSignalData from '../utils/getSignalData';
 import placeSignal from '../utils/placeSignal';
+import removeSignals from '../utils/removeSignal';
 
 const Home: NextPage = () => {
   const [myPosition, setMyPosition] = useRecoilState(myPositionState);
   const [mapPosition, setMapPosition] = useRecoilState(mapPositionAtom);
   const [isMapMoving, setIsMapMoving] = useRecoilState(mapMovingAtom);
+  const [mapAroundSignals, setMapAroundSignals] = useRecoilState(mapAroundSignalsAtom);
   const setAroundSignals = useSetRecoilState(aroundSignalsAtom);
   const [mapLoaded, setMapLoaded] = useState<boolean>(false);
   const [map, setMap] = useState();
@@ -33,14 +35,20 @@ const Home: NextPage = () => {
       const response = await getSignalData(mapPosition);
 
       if (!response.length) return;
+      if (mapAroundSignals.length) removeSignals(mapAroundSignals);
 
       const filteredSignals = filterSignals(response);
+      const newPlacedSignals: any[] = [];
 
       filteredSignals.forEach((position: any) => {
         Object.keys(position.phase).forEach(direction => {
-          placeSignal(position, direction, position.phase[direction], map);
+          const point = placeSignal(position, direction, position.phase[direction], map);
+
+          newPlacedSignals.push(point);
         });
       });
+
+      setMapAroundSignals(newPlacedSignals);
     })();
   }, [isMapMoving, mapPosition]);
 
@@ -97,7 +105,7 @@ const Home: NextPage = () => {
       const newPosition = {
         lat: cord.latitude,
         lng: cord.longitude,
-      }
+      };
 
       setMyPosition(newPosition);
     }, (err) => {
@@ -128,4 +136,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export default Home;

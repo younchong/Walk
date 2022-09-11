@@ -71,4 +71,6 @@ export default function placeSignal(position: position, direction: string, phase
   });
 
   point.setMap(map);
+
+  return point;
 }
