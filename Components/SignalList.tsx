@@ -1,10 +1,12 @@
 import styled from '@emotion/styled';
 import React, { FC, useEffect, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState, useRecoilState } from 'recoil';
 import { translateDirection, translatePhase } from '../utils/signalUtils';
 import { distanceAtom } from '../recoil/aroundSignals/atom';
 import placeSignal from '../utils/placeSignal';
 import signalWithCalculatedDistance from '../recoil/aroundSignals/withCalculated';
+import myPositionState from '../recoil/myPosition/atom';
+import mapPositionAtom from '../recoil/mapPosition/atom';
 
 interface ContainerProps {
   isActive: boolean;
@@ -112,8 +114,10 @@ interface ranges {
 }
 
 export const SignalList: FC<Props> = ({ map }) => {
+  const myPosition = useRecoilValue(myPositionState);
   const aroundSignals = useRecoilValue(signalWithCalculatedDistance);
   const setDistance = useSetRecoilState(distanceAtom);
+  const setMapPosition = useSetRecoilState(mapPositionAtom);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [ranges, setRanges] = useState<ranges>({
     0.5: true,
@@ -126,6 +130,16 @@ export const SignalList: FC<Props> = ({ map }) => {
     const curRange = e.target.id;
 
     if (!curRange) return;
+    if (curRange === "me") {
+      const position = {
+        lat: myPosition.lat,
+        lng: myPosition.lng,
+      };
+
+      map.panTo(new window.kakao.maps.LatLng(myPosition.lat, myPosition.lng));
+      setMapPosition(position);
+      return;
+    }
 
     const prevRange = Object.keys(ranges).find(range => ranges[range]);
 
@@ -159,6 +173,7 @@ export const SignalList: FC<Props> = ({ map }) => {
             {Object.keys(ranges).sort((a, b) => Number(a) - Number(b)).map(range => 
             <RangeItem id={range} isClicked={ranges[range]} key={range}>{range}km</RangeItem>
             )}
+            <span id="me"></span>
           </RangesBox>
         </ListHeader>
         <ListMain>
