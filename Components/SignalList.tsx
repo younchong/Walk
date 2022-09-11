@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import React, { FC, useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState, useRecoilState } from 'recoil';
-import { translateDirection, translatePhase } from '../utils/signalUtils';
 import { aroundSignalsAtom, distanceAtom } from '../recoil/aroundSignals/atom';
 import placeSignal from '../utils/placeSignal';
 import signalWithCalculatedDistance from '../recoil/aroundSignals/withCalculated';
@@ -11,6 +10,9 @@ import { useQuery } from 'react-query';
 import getSignalData from '../utils/getSignalData';
 import filterSignals from '../utils/filterSignals';
 import removeSignals from '../utils/removeSignal';
+import SignalDetail from './SignalDetail';
+import { analyzeDirectionAndTime } from '../utils/signalUtils';
+import updatedTimeAtom from '../recoil/updatedTime/atom';
 
 interface ContainerProps {
   isActive: boolean;
@@ -78,13 +80,13 @@ const RangeItem = styled.span<RangeItem>`
   &:hover{
     cursor: pointer;
   }
-`
+`;
 
 const ListMain = styled.main`
   padding: 5px 10px;
 `;
 
-const ListItem = styled.article`
+const SignalRow = styled.article`
   display: flex;
   align-items: center;
   height: 55px;
@@ -95,12 +97,10 @@ const ListItem = styled.article`
   }
 `;
 
-const ItemTitle = styled.span`
+const SignalTitle = styled.span`
   font-size: 20px;
   font-weight: 500;
-`
-
-const ItemDetails = styled.div``;
+`;
 
 export interface signal {
   title: string,
@@ -120,6 +120,7 @@ interface ranges {
 export const SignalList: FC<Props> = ({ map }) => {
   const myPosition = useRecoilValue(myPositionState);
   const aroundSignals = useRecoilValue(signalWithCalculatedDistance);
+  const setUpdatedTime = useSetRecoilState(updatedTimeAtom);
   const setAroundSignals = useSetRecoilState(aroundSignalsAtom);
   const setDistance = useSetRecoilState(distanceAtom);
   const setMapPosition = useSetRecoilState(mapPositionAtom);
@@ -158,6 +159,7 @@ export const SignalList: FC<Props> = ({ map }) => {
 
     const filteredSignals = filterSignals(data);
     setAroundSignals(filteredSignals as any);
+    setUpdatedTime(Date.now());
   }, [data]);
 
   const handleRange = (e: React.BaseSyntheticEvent) => {
@@ -214,17 +216,16 @@ export const SignalList: FC<Props> = ({ map }) => {
           {
             aroundSignals.map((signal: signal) => {
               return (
-                <ListItem key={signal.title}>
-                  <ItemTitle key={signal.title + "header"}>{signal.title}</ItemTitle>
+                <SignalRow key={signal.latlng.Ma + signal.latlng.La}>
+                  <SignalTitle key={signal.title}>{signal.title}</SignalTitle>
                   {Object.keys(signal.phase).map(direction => {
+                    const [dir, time] = analyzeDirectionAndTime(direction, signal.timing);
+
                     return (
-                      <ItemDetails key={direction}>
-                        <span key={direction + signal.title + signal.timing}>{translateDirection(direction, signal.timing)}</span>
-                        <span key={direction + signal.title + signal.phase[direction]}>{translatePhase(signal.phase[direction])}</span>
-                      </ItemDetails>
+                        <SignalDetail direction={dir} phase={signal.phase[direction]} timing={time} key={direction}/>
                     );
                   })}
-                </ListItem>
+                </SignalRow>
               )
             })
           }

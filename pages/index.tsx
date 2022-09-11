@@ -107,14 +107,15 @@ const Home: NextPage = () => {
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((pos) => {
       const cord = pos.coords;
-      const newPosition = {
-        lat: cord.latitude,
-        lng: cord.longitude,
-      };
       // const newPosition = {
-      //   lat: 37.57814842135318,
-      //   lng: 126.88837721721241,
-      // } dmc position
+      //   lat: cord.latitude,
+      //   lng: cord.longitude,
+      // };
+      const newPosition = {
+        lat: 37.57814842135318,
+        lng: 126.88837721721241,
+      };
+      //dmc position
 
       setMyPosition(newPosition);
     }, (err) => {
