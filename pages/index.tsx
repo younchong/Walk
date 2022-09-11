@@ -29,13 +29,17 @@ const Home: NextPage = () => {
   }, [mapPosition]);
 
   useEffect(() => {
-    if (!isMapMoving) return;
+    if (!isMapMoving) {
+      mapAroundSignals.length && removeSignals(mapAroundSignals);
+      setMapAroundSignals([]);
+
+      return;
+    }
 
     (async() => {
       const response = await getSignalData(mapPosition);
 
       if (!response.length) return;
-      if (mapAroundSignals.length) removeSignals(mapAroundSignals);
 
       const filteredSignals = filterSignals(response);
       const newPlacedSignals: any[] = [];
@@ -48,6 +52,7 @@ const Home: NextPage = () => {
         });
       });
 
+      mapAroundSignals.length && removeSignals(mapAroundSignals);
       setMapAroundSignals(newPlacedSignals);
     })();
   }, [isMapMoving, mapPosition]);
