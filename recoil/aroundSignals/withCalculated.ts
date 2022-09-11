@@ -10,7 +10,7 @@ const signalWithCalculatedDistance = selector({
     const myPosition = get(myPositionState);
     const signals = get(aroundSignalsAtom);
     const distance = get(distanceAtom);
-    
+
     return signals.filter((signal: signal) => {
       const signalPosition = {
         lat: signal.latlng.Ma,
@@ -19,7 +19,7 @@ const signalWithCalculatedDistance = selector({
 
       if (getDistance(myPosition, signalPosition) <= distance) return signal;
     });
-  }
+  },
 });
 
 export default signalWithCalculatedDistance;
