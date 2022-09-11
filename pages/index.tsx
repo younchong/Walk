@@ -111,6 +111,10 @@ const Home: NextPage = () => {
         lat: cord.latitude,
         lng: cord.longitude,
       };
+      // const newPosition = {
+      //   lat: 37.57814842135318,
+      //   lng: 126.88837721721241,
+      // } dmc position
 
       setMyPosition(newPosition);
     }, (err) => {

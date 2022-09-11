@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app'
 import { Global } from '@emotion/react'
 import global from "../styles/global";
 import { RecoilRoot } from 'recoil';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 declare global {
   interface Window {
@@ -10,12 +11,16 @@ declare global {
   }
 }
 
+const queryClient = new QueryClient();
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <RecoilRoot>
-      <Global styles={global} />
-      <Component {...pageProps} />
-    </RecoilRoot>
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Global styles={global} />
+        <Component {...pageProps} />
+      </RecoilRoot>
+    </QueryClientProvider>
   )
 }
 

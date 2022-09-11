@@ -2,11 +2,15 @@ import styled from '@emotion/styled';
 import React, { FC, useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState, useRecoilState } from 'recoil';
 import { translateDirection, translatePhase } from '../utils/signalUtils';
-import { distanceAtom } from '../recoil/aroundSignals/atom';
+import { aroundSignalsAtom, distanceAtom } from '../recoil/aroundSignals/atom';
 import placeSignal from '../utils/placeSignal';
 import signalWithCalculatedDistance from '../recoil/aroundSignals/withCalculated';
 import myPositionState from '../recoil/myPosition/atom';
 import mapPositionAtom from '../recoil/mapPosition/atom';
+import { useQuery } from 'react-query';
+import getSignalData from '../utils/getSignalData';
+import filterSignals from '../utils/filterSignals';
+import removeSignals from '../utils/removeSignal';
 
 interface ContainerProps {
   isActive: boolean;
@@ -116,6 +120,7 @@ interface ranges {
 export const SignalList: FC<Props> = ({ map }) => {
   const myPosition = useRecoilValue(myPositionState);
   const aroundSignals = useRecoilValue(signalWithCalculatedDistance);
+  const setAroundSignals = useSetRecoilState(aroundSignalsAtom);
   const setDistance = useSetRecoilState(distanceAtom);
   const setMapPosition = useSetRecoilState(mapPositionAtom);
   const [isActive, setIsActive] = useState<boolean>(false);
@@ -125,6 +130,35 @@ export const SignalList: FC<Props> = ({ map }) => {
     1.5: false,
     2: false
   });
+
+  const { data } = useQuery( "aroundSignals", async() => {
+    const updatedSinal = await getSignalData(myPosition);
+    
+    return updatedSinal;
+  },
+  {
+    refetchInterval: 90 * 1000,
+  }
+  );
+
+  useEffect(() => {
+    if (!data || !data.length) return;
+
+    // const oldPlacedSignals: any[] = [];
+
+    // aroundSignals.forEach((position: any) => {
+    //   Object.keys(position.phase).forEach(direction => {
+    //     const point = placeSignal(position, direction, position.phase[direction], map);
+
+    //     oldPlacedSignals.push(point);
+    //   });
+    // });
+    // removeSignals(oldPlacedSignals);
+    // 신호 변경됐을 때, 초록빛, 빨강 빛 겹치는 현상 지워주려고 했는데, 효과 없음
+
+    const filteredSignals = filterSignals(data);
+    setAroundSignals(filteredSignals as any);
+  }, [data]);
 
   const handleRange = (e: React.BaseSyntheticEvent) => {
     const curRange = e.target.id;
@@ -155,7 +189,7 @@ export const SignalList: FC<Props> = ({ map }) => {
 
   useEffect(() => {
     if (!aroundSignals.length) return;
-  
+
     aroundSignals.forEach((position: any) => {
       Object.keys(position.phase).forEach(direction => {
         placeSignal(position, direction, position.phase[direction], map);
