@@ -9,5 +9,5 @@ export default async function getSignalData(position: position) {
     body: JSON.stringify(position),
   });
 
-  return data.json();
+  return data.ok ? data.json() : [];
 }

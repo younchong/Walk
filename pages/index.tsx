@@ -2,7 +2,8 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil';
-import SignalList from '../Components/SignalList';
+import { useQuery } from 'react-query';
+import SignalList, { signal } from '../Components/SignalList';
 import filterSignals from '../utils/filterSignals';
 import getDistance from '../utils/getDistance';
 import getSignalData from '../utils/getSignalData';
@@ -12,8 +13,6 @@ import myPositionState from '../recoil/myPosition/atom';
 import mapPositionAtom from '../recoil/mapPosition/atom';
 import mapMovingAtom from '../recoil/mapMoving/atom';
 import { mapAroundSignalsAtom } from '../recoil/aroundSignals';
-import { useQuery } from 'react-query';
-import { signal }from "../Components/SignalList";
 
 const Home: NextPage = () => {
   const myPosition = useRecoilValue(myPositionState);

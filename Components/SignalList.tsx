@@ -140,7 +140,7 @@ export const SignalList: FC<Props> = ({ map }) => {
       refetchInterval: refetchIntervalTime,
       onSuccess: ( data ) => {
         if (!data.length) setRefetchIntervalTime(false);
-      }
+      },
     }
   );
 
