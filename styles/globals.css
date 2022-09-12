@@ -41,6 +41,19 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+:root {
+	font-size: 0.5em;
+}
+@media (min-width: 800px) {
+	:root {
+		font-size: 0.875em;
+	}
+}
+@media (min-width: 1200px) {
+	:root {
+		font-size: 1em;
+	}
+}
 
 #me {
 	width: 15px;
