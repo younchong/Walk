@@ -113,7 +113,7 @@ const Home: NextPage = () => {
         <title>Walk</title>
         <meta name="description" content="Walk Efficiently using Traffic light information" />
         <meta name="keyword" content="Walk, Traffic Light" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/걷다.png" />
       </Head>
 
       <div id="map" style={{ width: "100vw", height: "100vh"}}></div>
