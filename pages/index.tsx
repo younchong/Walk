@@ -112,7 +112,12 @@ const Home: NextPage = () => {
         <title>Walk</title>
         <meta name="description" content="Walk Efficiently using Traffic light information" />
         <meta name="keyword" content="Walk, Traffic Light" />
-        <link rel="icon" href="/걷다.png" />
+        <meta name="theme-color" content="#000000" />
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" type="image/png" href="/icons/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="/icons/favicon-16x16.png" sizes="16x16" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </Head>
 
       <div id="map" style={{ width: "100vw", height: "100vh"}}></div>
