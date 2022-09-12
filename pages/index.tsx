@@ -10,8 +10,9 @@ import placeSignal from '../utils/placeSignal';
 import removeSignals from '../utils/removeSignal';
 import myPositionState from '../recoil/myPosition/atom';
 import mapPositionAtom from '../recoil/mapPosition/atom';
-import { mapAroundSignalsAtom } from '../recoil/aroundSignals/atom';
 import mapMovingAtom from '../recoil/mapMoving/atom';
+import { mapAroundSignalsAtom } from '../recoil/aroundSignals';
+import { useQuery } from 'react-query';
 
 const Home: NextPage = () => {
   const myPosition = useRecoilValue(myPositionState);
@@ -20,6 +21,11 @@ const Home: NextPage = () => {
   const [mapAroundSignals, setMapAroundSignals] = useRecoilState(mapAroundSignalsAtom);
   const [mapLoaded, setMapLoaded] = useState<boolean>(false);
   const [map, setMap] = useState();
+  const { data, refetch } = useQuery("mapAroundSignals", async() => {
+    const updatedSignals = await getSignalData(mapPosition);
+
+    return updatedSignals;
+  });
 
   useEffect(() => {
     getDistance(myPosition, mapPosition) > 0.5 ?
@@ -35,26 +41,26 @@ const Home: NextPage = () => {
       return;
     }
 
-    (async() => {
-      const response = await getSignalData(mapPosition);
-
-      if (!response.length) return;
-
-      const filteredSignals = filterSignals(response);
-      const newPlacedSignals: any[] = [];
-
-      filteredSignals.forEach((position: any) => {
-        Object.keys(position.phase).forEach(direction => {
-          const point = placeSignal(position, direction, position.phase[direction], map);
-
-          newPlacedSignals.push(point);
-        });
-      });
-
-      mapAroundSignals.length && removeSignals(mapAroundSignals);
-      setMapAroundSignals(newPlacedSignals);
-    })();
+    refetch();
   }, [isMapMoving, mapPosition]);
+
+  useEffect(() => {
+    if (!data || !data.length) return;
+
+    const filteredSignals = filterSignals(data);
+    const newPlacedSignals: any[] = [];
+
+    filteredSignals.forEach((position: any) => {
+      Object.keys(position.phase).forEach(direction => {
+        const point = placeSignal(position, direction, position.phase[direction], map);
+
+        newPlacedSignals.push(point);
+      });
+    });
+
+    mapAroundSignals.length && removeSignals(mapAroundSignals);
+    setMapAroundSignals(newPlacedSignals);
+  }, [data]);
 
   useEffect(() => {
     if (!mapLoaded) return;
