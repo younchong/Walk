@@ -119,7 +119,7 @@ export const SignalList: FC<Props> = ({ map }) => {
   const [myPosition, setMyPosition] = useRecoilState(myPositionState);
   const aroundSignals = useRecoilValue(signalWithCalculatedDistance);
   const setUpdatedTime = useSetRecoilState(updatedTimeAtom);
-  const setAroundSignals = useSetRecoilState(aroundSignalsAtom);
+  const setAroundSignals = useSetRecoilState<signal[]>(aroundSignalsAtom);
   const setDistance = useSetRecoilState(distanceAtom);
   const setMapPosition = useSetRecoilState(mapPositionAtom);
   const [refetchIntervalTime, setRefetchIntervalTime] = useState<number | false>(90 * 1000);
@@ -181,14 +181,14 @@ export const SignalList: FC<Props> = ({ map }) => {
     !refetchIntervalTime && setRefetchIntervalTime(90 * 1000);
 
     const filteredSignals = filterSignals(data);
-    setAroundSignals(filteredSignals as any);
+    setAroundSignals(filteredSignals);
     setUpdatedTime(Date.now());
   }, [data]);
 
   useEffect(() => {
     if (!aroundSignals.length) return;
 
-    aroundSignals.forEach((position: any) => {
+    aroundSignals.forEach((position: signal) => {
       Object.keys(position.phase).forEach(direction => {
         placeSignal(position, direction, position.phase[direction], map);
       });
@@ -196,11 +196,11 @@ export const SignalList: FC<Props> = ({ map }) => {
   }, [aroundSignals]);
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition((pos) => {
-      const cord = pos.coords;
+    navigator.geolocation.getCurrentPosition((position) => {
+      const coord = position.coords;
       // const newPosition = {
-      //   lat: cord.latitude,
-      //   lng: cord.longitude,
+      //   lat: coord.latitude,
+      //   lng: coord.longitude,
       // };
       const newPosition = {
         lat: 37.57814842135318,

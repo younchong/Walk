@@ -13,6 +13,7 @@ import mapPositionAtom from '../recoil/mapPosition/atom';
 import mapMovingAtom from '../recoil/mapMoving/atom';
 import { mapAroundSignalsAtom } from '../recoil/aroundSignals';
 import { useQuery } from 'react-query';
+import { signal }from "../Components/SignalList";
 
 const Home: NextPage = () => {
   const myPosition = useRecoilValue(myPositionState);
@@ -50,7 +51,7 @@ const Home: NextPage = () => {
     const filteredSignals = filterSignals(data);
     const newPlacedSignals: any[] = [];
 
-    filteredSignals.forEach((position: any) => {
+    filteredSignals.forEach((position: signal) => {
       Object.keys(position.phase).forEach(direction => {
         const point = placeSignal(position, direction, position.phase[direction], map);
 
