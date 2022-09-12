@@ -11,25 +11,39 @@ interface position {
 }
 
 const getMapData = async () => {
-  // const result = await fetch(process.env.NEXT_PUBLIC_SIGNAL_MAP as string);
-  // const response = await result.json();
-  const response = mapData; // mockData
+  if (process.env.NODE_ENV === "development") {
+    const response = mapData;
+
+    return response;
+  }
+
+  const result = await fetch(process.env.NEXT_PUBLIC_SIGNAL_MAP as string);
+  const response = await result.json();
 
   return response;
 }
 
 const getSignalPhaseData = async () => {
-  // const result = await fetch(process.env.NEXT_PUBLIC_SIGNAL_PHASE as string);
-  // const response = await result.json();
-  const response = signalPhaseData; // mockData
+  if (process.env.NODE_ENV === "development") {
+    const response = signalPhaseData;
+
+    return response;
+  }
+
+  const result = await fetch(process.env.NEXT_PUBLIC_SIGNAL_PHASE as string);
+  const response = await result.json();
 
   return response;
 }
 
 const getSignalTimingData = async () => {
-  // const result = await fetch(process.env.NEXT_PUBLIC_SIGNAL_TIMING as string);
-  // const response = await result.json();
-  const response = signalTimingData;
+  if (process.env.NODE_ENV === "development") {
+    const response = signalTimingData;
+
+    return response;
+  }
+  const result = await fetch(process.env.NEXT_PUBLIC_SIGNAL_TIMING as string);
+  const response = await result.json();
 
   return response;
 }
@@ -39,8 +53,8 @@ export default async function handler(
   res: NextApiResponse<any>
 ) {
   const standardPosition = await JSON.parse(req.body);
-  const mapData = await getMapData(); // 현재 위치에서 주변에 있는 위도 경도 가져옴.
-  const signalPhase = await getSignalPhaseData(); // signal phase info
+  const mapData = await getMapData();
+  const signalPhase = await getSignalPhaseData();
   const signalTiming = await getSignalTimingData();
 
   const aroundSignal = mapData.filter((data: any) => {
