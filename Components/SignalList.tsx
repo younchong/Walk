@@ -118,7 +118,7 @@ interface ranges {
 }
 
 export const SignalList: FC<Props> = ({ map }) => {
-  const myPosition = useRecoilValue(myPositionState);
+  const [myPosition, setMyPosition] = useRecoilState(myPositionState);
   const aroundSignals = useRecoilValue(signalWithCalculatedDistance);
   const setUpdatedTime = useSetRecoilState(updatedTimeAtom);
   const setAroundSignals = useSetRecoilState(aroundSignalsAtom);
@@ -133,17 +133,17 @@ export const SignalList: FC<Props> = ({ map }) => {
     2: false
   });
 
-  const { data } = useQuery( "aroundSignals", async() => {
+  const { data, refetch } = useQuery( "aroundSignals", async() => {
     const updatedSinal = await getSignalData(myPosition);
     
     return updatedSinal;
-  },
-  {
-    refetchInterval: refetchIntervalTime,
-    onSuccess: ( data ) => {
-      if (!data.length) setRefetchIntervalTime(false);
+    },
+    {
+      refetchInterval: refetchIntervalTime,
+      onSuccess: ( data ) => {
+        if (!data.length) setRefetchIntervalTime(false);
+      }
     }
-  }
   );
 
   const handleRange = (e: React.BaseSyntheticEvent) => {
@@ -174,24 +174,13 @@ export const SignalList: FC<Props> = ({ map }) => {
   }
 
   useEffect(() => {
-    setRefetchIntervalTime(90 * 1000);
+    refetch();
   }, [myPosition]);
 
   useEffect(() => {
     if (!data || !data.length) return;
 
-    // const oldPlacedSignals: any[] = [];
-
-    // aroundSignals.forEach((position: any) => {
-    //   Object.keys(position.phase).forEach(direction => {
-    //     const point = placeSignal(position, direction, position.phase[direction], map);
-
-    //     oldPlacedSignals.push(point);
-    //   });
-    // });
-    // removeSignals(oldPlacedSignals);
-    // 신호 변경됐을 때, 초록빛, 빨강 빛 겹치는 현상 지워주려고 했는데, 효과 없음
-    // 아마도 id값을 제거해야될 것 같다. css 적용되어 있는
+    !refetchIntervalTime && setRefetchIntervalTime(90 * 1000);
 
     const filteredSignals = filterSignals(data);
     setAroundSignals(filteredSignals as any);
@@ -207,6 +196,24 @@ export const SignalList: FC<Props> = ({ map }) => {
       });
     });
   }, [aroundSignals]);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const cord = pos.coords;
+      // const newPosition = {
+      //   lat: cord.latitude,
+      //   lng: cord.longitude,
+      // };
+      const newPosition = {
+        lat: 37.57814842135318,
+        lng: 126.88837721721241,
+      }; //dmc position
+
+      setMyPosition(newPosition);
+    }, (err) => {
+      console.log(err);
+    });
+  }, []);
 
   return (
     <ListContainer isActive={isActive}>
