@@ -42,6 +42,7 @@ const getSignalTimingData = async () => {
 
     return response;
   }
+
   const result = await fetch(process.env.NEXT_PUBLIC_SIGNAL_TIMING as string);
   const response = await result.json();
 
