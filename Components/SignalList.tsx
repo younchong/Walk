@@ -36,7 +36,7 @@ const ListContainer = styled.div<ContainerProps>`
 `;
 
 const ListMarginTop = styled.div<ContainerMargin>`
-  height: ${(props) => (props.hasSignals ? "70vh" : "85vh")};
+  height: ${(props) => (props.hasSignals ? "80vh" : "90vh")};
   transition: .5s ease-in-out;
 `;
 

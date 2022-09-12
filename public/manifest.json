@@ -1,0 +1,38 @@
+{
+    "theme_color": "#000000",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "scope": "/",
+    "start_url": "/",
+    "name": "\uac77\ub2e4",
+    "short_name": "\uac77\ub2e4",
+    "description": "Progressive Web App that informs traffic light information around you for walking efficiently!",
+    "icons": [
+        {
+            "src": "./icons/icon-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        },
+        {
+            "src": "./icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "./icons/icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png"
+        },
+        {
+            "src": "./icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "./icons/icon-96x96.png",
+            "size": "96x96",
+            "type": "image/icon",
+            "purpose": "any maskable"
+        }
+    ]
+}
