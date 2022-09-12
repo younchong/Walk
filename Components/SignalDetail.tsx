@@ -4,7 +4,9 @@ import { useRecoilValue } from 'recoil';
 import updatedTimeAtom from '../recoil/updatedTime/atom';
 import styled from '@emotion/styled';
 
-const SignalInfomation = styled.div``;
+const SignalInfomation = styled.div`
+  margin-right: .7rem;
+`;
 
 interface Props {
   direction: string,
