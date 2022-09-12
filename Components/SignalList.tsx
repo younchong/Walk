@@ -124,6 +124,7 @@ export const SignalList: FC<Props> = ({ map }) => {
   const setAroundSignals = useSetRecoilState(aroundSignalsAtom);
   const setDistance = useSetRecoilState(distanceAtom);
   const setMapPosition = useSetRecoilState(mapPositionAtom);
+  const [refetchIntervalTime, setRefetchIntervalTime] = useState<number | false>(90 * 1000);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [ranges, setRanges] = useState<ranges>({
     0.5: true,
@@ -138,29 +139,12 @@ export const SignalList: FC<Props> = ({ map }) => {
     return updatedSinal;
   },
   {
-    refetchInterval: 90 * 1000,
+    refetchInterval: refetchIntervalTime,
+    onSuccess: ( data ) => {
+      if (!data.length) setRefetchIntervalTime(false);
+    }
   }
   );
-
-  useEffect(() => {
-    if (!data || !data.length) return;
-
-    // const oldPlacedSignals: any[] = [];
-
-    // aroundSignals.forEach((position: any) => {
-    //   Object.keys(position.phase).forEach(direction => {
-    //     const point = placeSignal(position, direction, position.phase[direction], map);
-
-    //     oldPlacedSignals.push(point);
-    //   });
-    // });
-    // removeSignals(oldPlacedSignals);
-    // 신호 변경됐을 때, 초록빛, 빨강 빛 겹치는 현상 지워주려고 했는데, 효과 없음
-
-    const filteredSignals = filterSignals(data);
-    setAroundSignals(filteredSignals as any);
-    setUpdatedTime(Date.now());
-  }, [data]);
 
   const handleRange = (e: React.BaseSyntheticEvent) => {
     const curRange = e.target.id;
@@ -188,6 +172,31 @@ export const SignalList: FC<Props> = ({ map }) => {
       return updatedRanges;
     });
   }
+
+  useEffect(() => {
+    setRefetchIntervalTime(90 * 1000);
+  }, [myPosition]);
+
+  useEffect(() => {
+    if (!data || !data.length) return;
+
+    // const oldPlacedSignals: any[] = [];
+
+    // aroundSignals.forEach((position: any) => {
+    //   Object.keys(position.phase).forEach(direction => {
+    //     const point = placeSignal(position, direction, position.phase[direction], map);
+
+    //     oldPlacedSignals.push(point);
+    //   });
+    // });
+    // removeSignals(oldPlacedSignals);
+    // 신호 변경됐을 때, 초록빛, 빨강 빛 겹치는 현상 지워주려고 했는데, 효과 없음
+    // 아마도 id값을 제거해야될 것 같다. css 적용되어 있는
+
+    const filteredSignals = filterSignals(data);
+    setAroundSignals(filteredSignals as any);
+    setUpdatedTime(Date.now());
+  }, [data]);
 
   useEffect(() => {
     if (!aroundSignals.length) return;
