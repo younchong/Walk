@@ -1,18 +1,16 @@
 import styled from '@emotion/styled';
 import React, { FC, useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState, useRecoilState } from 'recoil';
-import { aroundSignalsAtom, distanceAtom } from '../recoil/aroundSignals/atom';
-import placeSignal from '../utils/placeSignal';
-import signalWithCalculatedDistance from '../recoil/aroundSignals/withCalculated';
-import myPositionState from '../recoil/myPosition/atom';
-import mapPositionAtom from '../recoil/mapPosition/atom';
 import { useQuery } from 'react-query';
+import placeSignal from '../utils/placeSignal';
 import getSignalData from '../utils/getSignalData';
 import filterSignals from '../utils/filterSignals';
-import removeSignals from '../utils/removeSignal';
 import SignalDetail from './SignalDetail';
 import { analyzeDirectionAndTime } from '../utils/signalUtils';
+import mapPositionAtom from '../recoil/mapPosition/atom';
+import myPositionState from '../recoil/myPosition/atom';
 import updatedTimeAtom from '../recoil/updatedTime/atom';
+import aroundSignalsAtom, { signalWithCalculatedDistance, distanceAtom } from '../recoil/aroundSignals/index';
 
 interface ContainerProps {
   isActive: boolean;
@@ -40,7 +38,7 @@ const ListContainer = styled.div<ContainerProps>`
 const ListMarginTop = styled.div<ContainerMargin>`
   height: ${(props) => (props.hasSignals ? "70%" : "90%")};
   transition: .5s ease-in-out;
-`
+`;
 
 const List = styled.div`
   border-radius: 1em 1em 0 1em;
