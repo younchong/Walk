@@ -197,17 +197,22 @@ export const SignalList: FC<Props> = ({ map }) => {
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
-      const coord = position.coords;
-      // const newPosition = {
-      //   lat: coord.latitude,
-      //   lng: coord.longitude,
-      // };
-      const newPosition = {
-        lat: 37.57814842135318,
-        lng: 126.88837721721241,
-      }; //dmc position
+      if (process.env.NODE_ENV === "development") {
+        const newPosition = {
+          lat: 37.57814842135318,
+          lng: 126.88837721721241,
+        } 
+        // dmc position
+        setMyPosition(newPosition)
+      } else {
+        const coord = position.coords;
+        const newPosition = {
+          lat: coord.latitude,
+          lng: coord.longitude,
+        };
 
-      setMyPosition(newPosition);
+        setMyPosition(newPosition);
+      }
     }, (err) => {
       console.log(err);
     });
