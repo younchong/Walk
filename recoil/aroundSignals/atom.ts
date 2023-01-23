@@ -1,7 +1,7 @@
 import { atom } from "recoil";
-import { signal } from '../../Components/SignalList';
+import { SignalTypes } from '../../Components/SignalList/type';
 
-const aroundSignalsAtom = atom<signal[]>({
+const aroundSignalsAtom = atom<SignalTypes[]>({
   key: "aroundSignals",
   default: [],
   dangerouslyAllowMutability: true,
