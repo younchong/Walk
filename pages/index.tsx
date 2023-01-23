@@ -3,7 +3,8 @@ import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useQuery } from 'react-query';
-import SignalList, { signal } from '../Components/SignalList';
+import SignalList from '../Components/SignalList';
+import  { SignalTypes } from '../Components/SignalList/type';
 import filterSignals from '../utils/filterSignals';
 import getDistance from '../utils/getDistance';
 import getSignalData from '../utils/getSignalData';
@@ -50,7 +51,7 @@ const Home: NextPage = () => {
     const filteredSignals = filterSignals(data);
     const newPlacedSignals: any[] = [];
 
-    filteredSignals.forEach((position: signal) => {
+    filteredSignals.forEach((position: SignalTypes) => {
       Object.keys(position.phase).forEach(direction => {
         const point = placeSignal(position, direction, position.phase[direction], map);
 

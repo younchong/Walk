@@ -2,7 +2,7 @@ import { selector } from "recoil";
 import { aroundSignalsAtom, distanceAtom } from "./atom";
 import myPositionState from '../myPosition/atom';
 import getDistance from '../../utils/getDistance';
-import { signal } from '../../Components/SignalList';
+import { SignalTypes } from '../../Components/SignalList/type';
 
 const signalWithCalculatedDistance = selector({
   key: "calcultedDistanceSignals",
@@ -11,7 +11,7 @@ const signalWithCalculatedDistance = selector({
     const signals = get(aroundSignalsAtom);
     const distance = get(distanceAtom);
 
-    return signals.filter((signal: signal) => {
+    return signals.filter((signal: SignalTypes) => {
       const signalPosition = {
         lat: signal.latlng.Ma,
         lng: signal.latlng.La
