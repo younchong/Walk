@@ -88,7 +88,9 @@ export const SignalList: FC<SignalListProps> = ({ map }) => {
 
     aroundSignals.forEach((position: SignalTypes) => {
       Object.keys(position.phase).forEach(direction => {
-        placeSignal(position, direction, position.phase[direction], map);
+        const phase = position.phase[direction];
+
+        placeSignal({position, direction, phase, map});
       });
     });
   }, [aroundSignals]);
