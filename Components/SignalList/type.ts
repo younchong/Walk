@@ -25,5 +25,4 @@ export type AvailableRanges = "0.5" | "1" | "1.5" | "2";
 
 export type RangesType = {
   [range in AvailableRanges]: boolean;
-  // [key: string]: boolean;
 }

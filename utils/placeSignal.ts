@@ -8,7 +8,14 @@ interface position {
   phase: phase;
 }
 
-export default function placeSignal(position: position, direction: string, phase: string, map: any) {
+type Props = {
+  position: position,
+  direction: string,
+  phase: string, 
+  map: any,
+}
+
+export default function placeSignal({ position, direction, phase, map }: Props) {
   const earth = 6378.137;
   const pi = Math.PI;
   const m = (1 / ((2 * pi / 360) * earth)) / 1000;

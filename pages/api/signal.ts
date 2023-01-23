@@ -5,11 +5,6 @@ import signalTimingData from "../../data/timingMockData.json"
 import getDistance from '../../utils/getDistance'
 import mapData from "../../data/mapMockData.json"
 
-interface position {
-  lat: number,
-  lng: number,
-}
-
 const getMapData = async () => {
   if (process.env.NODE_ENV === "development") {
     const response = mapData;

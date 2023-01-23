@@ -14,6 +14,8 @@ import myPositionState from '../recoil/myPosition/atom';
 import mapPositionAtom from '../recoil/mapPosition/atom';
 import mapMovingAtom from '../recoil/mapMoving/atom';
 import { mapAroundSignalsAtom } from '../recoil/aroundSignals';
+import { initKakaoMap } from '../utils/initKakaoMap';
+import { initScript } from '../utils/initScript';
 
 const Home: NextPage = () => {
   const myPosition = useRecoilValue(myPositionState);
@@ -29,9 +31,11 @@ const Home: NextPage = () => {
   });
 
   useEffect(() => {
-    getDistance(myPosition, mapPosition) > 0.5 ?
-    setIsMapMoving(true) :
-    setIsMapMoving(false);
+    if (getDistance(myPosition, mapPosition) > 0.5) {
+      setIsMapMoving(true);
+    } else {
+      setIsMapMoving(false);
+    }
   }, [mapPosition]);
 
   useEffect(() => {
@@ -53,7 +57,8 @@ const Home: NextPage = () => {
 
     filteredSignals.forEach((position: SignalTypes) => {
       Object.keys(position.phase).forEach(direction => {
-        const point = placeSignal(position, direction, position.phase[direction], map);
+        const phase = position.phase[direction];
+        const point = placeSignal({position, direction, phase, map});
 
         newPlacedSignals.push(point);
       });
@@ -66,45 +71,11 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (!mapLoaded) return;
 
-    new window.kakao.maps.load(() => {
-      const container = document.querySelector("#map");
-      const options = {
-        center: new window.kakao.maps.LatLng(myPosition.lat, myPosition.lng),
-			  level: 2
-      };
-      const map = new window.kakao.maps.Map(container, options);
-
-      map.panTo(new window.kakao.maps.LatLng(myPosition.lat, myPosition.lng));
-
-      const myIcon = `<div id="me"></div>`;
-      const currentOverlay = new window.kakao.maps.CustomOverlay({
-          position: new window.kakao.maps.LatLng(myPosition.lat, myPosition.lng),
-          content: myIcon,
-          map: map
-      });
-
-      currentOverlay.setMap(map);
-      setMap(map);
-
-      new window.kakao.maps.event.addListener(map, "dragend", () => {
-        const center = map.getCenter();
-        const position = {
-          lat: center.getLat(),
-          lng: center.getLng(),
-        };
-
-        setMapPosition(position);
-      });
-    });
+    initKakaoMap({ myPosition, setMap, setMapPosition });
   }, [mapLoaded, myPosition.lat, myPosition.lng]);
 
   useEffect(() => {
-    const script = document.createElement("script");
-
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAOMAP_API_KEY}&autoload=false`;
-    script.addEventListener("load", () => setMapLoaded(true));
-
-    document.head.append(script);
+    initScript({ setMapLoaded });
   }, []);
 
   return (
