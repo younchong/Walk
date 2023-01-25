@@ -4,73 +4,87 @@ import signalPhaseData from "../../data/phaseMockData.json"
 import signalTimingData from "../../data/timingMockData.json"
 import getDistance from '../../utils/getDistance'
 import mapData from "../../data/mapMockData.json"
+import { UpdatedLocation, Location, SignalInformation, SignalPhase, SignalTiming } from './type'
+
+const mapStore: UpdatedLocation[] = [];
 
 const getMapData = async () => {
-  if (process.env.NODE_ENV === "development") {
-    const response = mapData;
-
-    return response;
-  }
+  if (mapStore.length) return mapStore;
 
   const result = await fetch(process.env.NEXT_PUBLIC_SIGNAL_MAP as string);
   const response = await result.json();
 
-  return response;
+  response.forEach((data: Location) => mapStore.push({
+    ...data,
+    lat: data.mapCtptIntLat / 10000000,
+    lng: data.mapCtptIntLot / 10000000,
+  }));
+
+  return mapStore;
+}
+
+const getAroundLocationList = async (userPosition: UpdatedLocation) => {
+  const mapData = await getMapData();
+  const aroundLocationList = mapData.map((location: UpdatedLocation) => {
+    if (getDistance(userPosition, location) <= 2) return location;
+  });
+
+  return aroundLocationList;
 }
 
 const getSignalPhaseData = async () => {
-  if (process.env.NODE_ENV === "development") {
-    const response = signalPhaseData;
+  // if (process.env.NODE_ENV === "development") {
+  //   const response = signalPhaseData;
 
-    return response;
-  }
+  //   return response;
+  // }
 
   const result = await fetch(process.env.NEXT_PUBLIC_SIGNAL_PHASE as string);
-  const response = await result.json();
+  const response: SignalPhase[] = await result.json();
 
   return response;
 }
 
 const getSignalTimingData = async () => {
-  if (process.env.NODE_ENV === "development") {
-    const response = signalTimingData;
+  // if (process.env.NODE_ENV === "development") {
+  //   const response = signalTimingData;
 
-    return response;
-  }
+  //   return response;
+  // }
 
   const result = await fetch(process.env.NEXT_PUBLIC_SIGNAL_TIMING as string);
-  const response = await result.json();
+  const response: SignalTiming[] = await result.json();
 
   return response;
 }
 
-export default async function handler(
+const createSignalMap = (informations: SignalPhase[] | SignalTiming[]) => {
+  const filteredMap = new Map();
+
+  informations.forEach((info: SignalPhase | SignalTiming) => {
+    filteredMap.set(info.itstId, info);
+  });
+
+  return filteredMap;
+}
+
+export default async function getAroundSignalInformation(
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) {
-  const standardPosition = await JSON.parse(req.body);
-  const mapData = await getMapData();
-  const signalPhase = await getSignalPhaseData();
-  const signalTiming = await getSignalTimingData();
+  const userPosition = await JSON.parse(req.body);
+  const [aroundLocationList, signalPhase, signalTiming] = await Promise.all([getAroundLocationList(userPosition), getSignalPhaseData(), getSignalTimingData()]);
+  const signalPhaseMap = createSignalMap(signalPhase);
+  const signalTimingMap = createSignalMap(signalTiming);
+  const aroundSiganlInformation = aroundLocationList.map((location?: UpdatedLocation) => {
+    const information = {...location, phase: null, timing: null};
+    const locationId = location?.itstId;
 
-  const aroundSignal = mapData.filter((data: any) => {
-    const signalPosition = {
-      lat: data.mapCtptIntLat / 10000000,
-      lng: data.mapCtptIntLot / 10000000,
-    }
-
-    if (getDistance(standardPosition, signalPosition) <= 2) {
-      const phase = signalPhase.find((signal: any) => signal.itstId === data.itstId);
-      const timing = signalTiming.find((signal: any) => signal.itstId === data.itstId);
-
-      data.lat = signalPosition.lat;
-      data.lng = signalPosition.lng;
-      data.phase = phase;
-      data.timing = timing;
-
-      return data;
-    }
+    information.phase = signalPhaseMap.get(locationId);
+    information.timing = signalTimingMap.get(locationId);
+    
+    return information;
   });
 
-  res.status(200).json(aroundSignal);
+  res.status(200).json(aroundSiganlInformation);
 }
