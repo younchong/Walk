@@ -11,9 +11,9 @@ export type Location =  {
   regDt: Date,
 }
 
-export type UpdatedLocation = Location & {lat: number, lng: number};
+export type UpdatedLocation = Location & { lat: number, lng: number };
 
-export type SignalInformation = UpdatedLocation & {phase: string, timing: number};
+export type SignalInformation = UpdatedLocation & { phase: string, timing: number };
 
 export type SignalTiming = {
   dataId: string;
