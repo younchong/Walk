@@ -1,10 +1,10 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
+import getDistance from '../../utils/getDistance'
+import { UpdatedLocation, Location, SignalInformation, SignalPhase, SignalTiming } from './type'
 import signalPhaseData from "../../data/phaseMockData.json"
 import signalTimingData from "../../data/timingMockData.json"
-import getDistance from '../../utils/getDistance'
 import mapData from "../../data/mapMockData.json"
-import { UpdatedLocation, Location, SignalInformation, SignalPhase, SignalTiming } from './type'
 
 const mapStore: UpdatedLocation[] = [];
 
@@ -12,7 +12,7 @@ const getMapData = async () => {
   if (mapStore.length) return mapStore;
 
   const result = await fetch(process.env.NEXT_PUBLIC_SIGNAL_MAP as string);
-  const response = await result.json();
+  const response: Location[] = await result.json();
 
   response.forEach((data: Location) => mapStore.push({
     ...data,
@@ -25,7 +25,7 @@ const getMapData = async () => {
 
 const getAroundLocationList = async (userPosition: UpdatedLocation) => {
   const mapData = await getMapData();
-  const aroundLocationList = mapData.map((location: UpdatedLocation) => {
+  const aroundLocationList: (UpdatedLocation | undefined)[] = mapData.map((location: UpdatedLocation) => {
     if (getDistance(userPosition, location) <= 2) return location;
   });
 
@@ -33,12 +33,6 @@ const getAroundLocationList = async (userPosition: UpdatedLocation) => {
 }
 
 const getSignalPhaseData = async () => {
-  // if (process.env.NODE_ENV === "development") {
-  //   const response = signalPhaseData;
-
-  //   return response;
-  // }
-
   const result = await fetch(process.env.NEXT_PUBLIC_SIGNAL_PHASE as string);
   const response: SignalPhase[] = await result.json();
 
@@ -46,12 +40,6 @@ const getSignalPhaseData = async () => {
 }
 
 const getSignalTimingData = async () => {
-  // if (process.env.NODE_ENV === "development") {
-  //   const response = signalTimingData;
-
-  //   return response;
-  // }
-
   const result = await fetch(process.env.NEXT_PUBLIC_SIGNAL_TIMING as string);
   const response: SignalTiming[] = await result.json();
 
@@ -61,8 +49,8 @@ const getSignalTimingData = async () => {
 const createSignalMap = (informations: SignalPhase[] | SignalTiming[]) => {
   const filteredMap = new Map();
 
-  informations.forEach((info: SignalPhase | SignalTiming) => {
-    filteredMap.set(info.itstId, info);
+  informations.forEach((information: SignalPhase | SignalTiming) => {
+    filteredMap.set(information.itstId, information);
   });
 
   return filteredMap;
