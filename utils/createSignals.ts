@@ -11,7 +11,7 @@ type Timing = {
   [index: string | SignalTimingKey]: number
 }
 
-type CreatedSignal = {
+export type CreatedSignal = {
   title: string,
   latlng: any,
   phase: Phase,

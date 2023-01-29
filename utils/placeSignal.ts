@@ -1,15 +1,7 @@
-interface phase {
-  [index: string]: string
-}
-
-interface position {
-  title: string;
-  latlng: any;
-  phase: phase;
-}
+import { CreatedSignal } from "./createSignals";
 
 type Props = {
-  position: position,
+  position: CreatedSignal,
   direction: string,
   phase: string, 
   map: any,
