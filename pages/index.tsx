@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { useQuery } from 'react-query';
 import SignalList from '../Components/SignalList';
 import { CreatedSignal, createSignals } from '../utils/createSignals';
@@ -17,7 +17,7 @@ import { initKakaoMap } from '../utils/initKakaoMap';
 import { initScript } from '../utils/initScript';
 
 const Home: NextPage = () => {
-  const myPosition = useRecoilValue(myPositionState);
+  const [myPosition, setMyPosition] = useRecoilState(myPositionState);
   const [mapPosition, setMapPosition] = useRecoilState(mapPositionAtom);
   const [isMapMoving, setIsMapMoving] = useRecoilState(mapMovingAtom);
   const [mapAroundSignals, setMapAroundSignals] = useRecoilState(mapAroundSignalsAtom);
@@ -75,6 +75,17 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     initScript({ setMapLoaded });
+    navigator.geolocation.getCurrentPosition((position) => {
+      const coord = position.coords;
+        const myPosition = {
+          lat: coord.latitude,
+          lng: coord.longitude,
+        };
+
+        setMyPosition(myPosition);
+    }, (err) => {
+      alert('위치정보 사용 불가');
+    });
   }, []);
 
   return (
