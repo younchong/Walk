@@ -98,22 +98,6 @@ export const SignalList: FC<SignalListProps> = ({ map }) => {
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
-      // if (process.env.NODE_ENV === "development") {
-      //   const newPosition = {
-      //     lat: 37.57814842135318,
-      //     lng: 126.88837721721241,
-      //   } 
-      //   // dmc position
-      //   setMyPosition(newPosition)
-      // } else {
-      //   const coord = position.coords;
-      //   const newPosition = {
-      //     lat: coord.latitude,
-      //     lng: coord.longitude,
-      //   };
-
-      //   setMyPosition(newPosition);
-      // }
       const coord = position.coords;
         const newPosition = {
           lat: coord.latitude,
