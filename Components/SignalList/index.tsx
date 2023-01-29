@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { useRecoilValue, useSetRecoilState, useRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { useQuery } from 'react-query';
 import placeSignal from '../../utils/placeSignal';
 import getSignalData from '../../utils/getSignalData';
@@ -15,7 +15,7 @@ import { List, ListContainer, ListHeader, ListMain, ListMarginTop, RangeItem, Ra
 import { SignalInformation } from "../../pages/api/type";
 
 export const SignalList: FC<SignalListProps> = ({ map }) => {
-  const [myPosition, setMyPosition] = useRecoilState(myPositionState);
+  const myPosition = useRecoilValue(myPositionState);
   const aroundSignals = useRecoilValue(signalWithCalculatedDistance);
   const setUpdatedTime = useSetRecoilState(updatedTimeAtom);
   const setAroundSignals = useSetRecoilState<SignalTypes[]>(aroundSignalsAtom);
@@ -95,20 +95,6 @@ export const SignalList: FC<SignalListProps> = ({ map }) => {
       });
     });
   }, [aroundSignals]);
-
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const coord = position.coords;
-        const newPosition = {
-          lat: coord.latitude,
-          lng: coord.longitude,
-        };
-
-        setMyPosition(newPosition);
-    }, (err) => {
-      console.log(err);
-    });
-  }, []);
 
   return (
     <ListContainer isActive={isActive}>
