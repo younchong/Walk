@@ -5,7 +5,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { useQuery } from 'react-query';
 import SignalList from '../Components/SignalList';
 import  { SignalTypes } from '../Components/SignalList/type';
-import filterSignals from '../utils/filterSignals';
+import { createSignals } from '../utils/createSignals';
 import getDistance from '../utils/getDistance';
 import getSignalData from '../utils/getSignalData';
 import placeSignal from '../utils/placeSignal';
@@ -52,10 +52,10 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (!data || !data.length) return;
 
-    const filteredSignals = filterSignals(data);
+    const signalsInfo = createSignals(data);
     const newPlacedSignals: any[] = [];
 
-    filteredSignals.forEach((position: SignalTypes) => {
+    signalsInfo.forEach((position: SignalTypes) => {
       Object.keys(position.phase).forEach(direction => {
         const phase = position.phase[direction];
         const point = placeSignal({position, direction, phase, map});

@@ -13,7 +13,7 @@ export type Location =  {
 
 export type UpdatedLocation = Location & { lat: number, lng: number };
 
-export type SignalInformation = UpdatedLocation & { phase: string, timing: number };
+export type SignalInformation = UpdatedLocation & { phase: SignalPhase | null, timing: SignalTiming | null };
 
 export type SignalTiming = {
   dataId: string;
