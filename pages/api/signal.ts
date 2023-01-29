@@ -25,11 +25,15 @@ const getMapData = async () => {
 
 const getAroundLocationList = async (userPosition: UpdatedLocation) => {
   const mapData = await getMapData();
-  const aroundLocationList: (UpdatedLocation | undefined)[] = mapData.map((location: UpdatedLocation) => {
-    if (getDistance(userPosition, location) <= 2) return location;
+  const aroundLocationList: UpdatedLocation[] = [];
+
+  mapData.forEach((location: UpdatedLocation) => {
+    if (getDistance(userPosition, location) <= 2) {
+      aroundLocationList.push(location);
+    }
   });
 
-  return aroundLocationList;
+  return aroundLocationList as UpdatedLocation[];
 }
 
 const getSignalPhaseData = async () => {
@@ -58,18 +62,18 @@ const createSignalMap = (informations: SignalPhase[] | SignalTiming[]) => {
 
 export default async function getAroundSignalInformation(
   req: NextApiRequest,
-  res: NextApiResponse<any>
+  res: NextApiResponse<SignalInformation[]>
 ) {
-  const userPosition = await JSON.parse(req.body);
+  const userPosition = JSON.parse(req.body);
   const [aroundLocationList, signalPhase, signalTiming] = await Promise.all([getAroundLocationList(userPosition), getSignalPhaseData(), getSignalTimingData()]);
   const signalPhaseMap = createSignalMap(signalPhase);
   const signalTimingMap = createSignalMap(signalTiming);
-  const aroundSiganlInformation = aroundLocationList.map((location?: UpdatedLocation) => {
-    const information = {...location, phase: null, timing: null};
-    const locationId = location?.itstId;
+  const aroundSiganlInformation: SignalInformation[] = aroundLocationList.map((location: UpdatedLocation) => {
+    const information: SignalInformation = {...location, phase: null, timing: null};
+    const locationId = location.itstId;
 
-    information.phase = signalPhaseMap.get(locationId);
-    information.timing = signalTimingMap.get(locationId);
+    information.phase = signalPhaseMap.get(locationId) || null;
+    information.timing = signalTimingMap.get(locationId) || null;
     
     return information;
   });

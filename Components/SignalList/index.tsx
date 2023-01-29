@@ -3,7 +3,7 @@ import { useRecoilValue, useSetRecoilState, useRecoilState } from 'recoil';
 import { useQuery } from 'react-query';
 import placeSignal from '../../utils/placeSignal';
 import getSignalData from '../../utils/getSignalData';
-import filterSignals from '../../utils/filterSignals';
+import { createSignals } from '../../utils/createSignals';
 import SignalDetail from '../SignalDetail';
 import { analyzeDirectionAndTime } from '../../utils/signalUtils';
 import mapPositionAtom from '../../recoil/mapPosition/atom';
@@ -12,6 +12,7 @@ import updatedTimeAtom from '../../recoil/updatedTime/atom';
 import aroundSignalsAtom, { signalWithCalculatedDistance, distanceAtom } from '../../recoil/aroundSignals/index';
 import { SignalListProps, RangesType, SignalTypes, AvailableRanges } from './type';
 import { List, ListContainer, ListHeader, ListMain, ListMarginTop, RangeItem, RangesBox, SignalRow, SignalTitle } from './style';
+import { SignalInformation } from "../../pages/api/type";
 
 export const SignalList: FC<SignalListProps> = ({ map }) => {
   const [myPosition, setMyPosition] = useRecoilState(myPositionState);
@@ -30,7 +31,7 @@ export const SignalList: FC<SignalListProps> = ({ map }) => {
   });
 
   const { data, refetch } = useQuery("aroundSignals", async() => {
-    const updatedSinal = await getSignalData(myPosition);
+    const updatedSinal: SignalInformation[] = await getSignalData(myPosition);
     
     return updatedSinal;
     },
@@ -74,12 +75,12 @@ export const SignalList: FC<SignalListProps> = ({ map }) => {
   }, [myPosition]);
 
   useEffect(() => {
-    if (!data || !data.length) return;
+    if (!data?.length) return;
 
     !refetchIntervalTime && setRefetchIntervalTime(90 * 1000);
 
-    const filteredSignals = filterSignals(data);
-    setAroundSignals(filteredSignals);
+    const signalsInfo = createSignals(data);
+    setAroundSignals(signalsInfo);
     setUpdatedTime(Date.now());
   }, [data]);
 
@@ -97,22 +98,29 @@ export const SignalList: FC<SignalListProps> = ({ map }) => {
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
-      if (process.env.NODE_ENV === "development") {
-        const newPosition = {
-          lat: 37.57814842135318,
-          lng: 126.88837721721241,
-        } 
-        // dmc position
-        setMyPosition(newPosition)
-      } else {
-        const coord = position.coords;
+      // if (process.env.NODE_ENV === "development") {
+      //   const newPosition = {
+      //     lat: 37.57814842135318,
+      //     lng: 126.88837721721241,
+      //   } 
+      //   // dmc position
+      //   setMyPosition(newPosition)
+      // } else {
+      //   const coord = position.coords;
+      //   const newPosition = {
+      //     lat: coord.latitude,
+      //     lng: coord.longitude,
+      //   };
+
+      //   setMyPosition(newPosition);
+      // }
+      const coord = position.coords;
         const newPosition = {
           lat: coord.latitude,
           lng: coord.longitude,
         };
 
         setMyPosition(newPosition);
-      }
     }, (err) => {
       console.log(err);
     });
