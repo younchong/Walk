@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { SetterOrUpdater } from "recoil";
+import { debounce } from './debounce';
 
 type MapPositionType = {
   lat: number;
@@ -33,7 +34,7 @@ export const initKakaoMap = ({ myPosition, setMap, setMapPosition }: MapProps) =
     currentOverlay.setMap(map);
     setMap(map);
 
-    new window.kakao.maps.event.addListener(map, "dragend", () => {
+    const debouncedSetMapPosition = debounce(() => {
       const center = map.getCenter();
       const position = {
         lat: center.getLat(),
@@ -41,6 +42,8 @@ export const initKakaoMap = ({ myPosition, setMap, setMapPosition }: MapProps) =
       };
 
       setMapPosition(position);
-    });
+    }, 1000);
+
+    new window.kakao.maps.event.addListener(map, "idle", debouncedSetMapPosition);
   });
 }
