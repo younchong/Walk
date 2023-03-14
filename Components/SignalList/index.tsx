@@ -111,9 +111,9 @@ export const SignalList: FC<SignalListProps> = ({ map }) => {
         </ListHeader>
         <ListMain>
           {
-            aroundSignals.map((signal: SignalTypes) => {
+            aroundSignals.map((signal: SignalTypes, index) => {
               return (
-                <SignalRow key={signal.latlng.Ma + signal.latlng.La}>
+                <SignalRow key={signal.latlng.Ma + signal.latlng.La + index}>
                   <SignalTitle key={signal.title}>{signal.title}</SignalTitle>
                   {Object.keys(signal.phase).map(direction => {
                     const [dir, time] = analyzeDirectionAndTime(direction, signal.timing);
