@@ -80,6 +80,7 @@ export const SignalList: FC<SignalListProps> = ({ map }) => {
     !refetchIntervalTime && setRefetchIntervalTime(90 * 1000);
 
     const signalsInfo = createSignals(data);
+    // 여기서 거리 정보 추가 현재 위치로부터.
     setAroundSignals(signalsInfo);
     setUpdatedTime(Date.now());
   }, [data]);
@@ -89,9 +90,10 @@ export const SignalList: FC<SignalListProps> = ({ map }) => {
 
     aroundSignals.forEach((position: SignalTypes) => {
       Object.keys(position.phase).forEach(direction => {
+        const title = position.title;
         const phase = position.phase[direction];
 
-        placeSignal({position, direction, phase, map});
+        placeSignal({position, direction, phase, map, title});
       });
     });
   }, [aroundSignals]);

@@ -56,8 +56,9 @@ const Home: NextPage = () => {
 
     signalsInfo.forEach((position: CreatedSignal) => {
       Object.keys(position.phase).forEach(direction => {
+        const title = position.title;
         const phase = position.phase[direction];
-        const point = placeSignal({position, direction, phase, map});
+        const point = placeSignal({position, direction, phase, map, title});
 
         newPlacedSignals.push(point);
       });

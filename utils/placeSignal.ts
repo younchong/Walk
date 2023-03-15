@@ -5,13 +5,14 @@ type Props = {
   direction: string,
   phase: string, 
   map: any,
+  title: string,
 }
 
-export default function placeSignal({ position, direction, phase, map }: Props) {
-  const earth = 6378.137;
-  const pi = Math.PI;
-  const m = (1 / ((2 * pi / 360) * earth)) / 1000;
-  const cos = Math.cos;
+export default function placeSignal({ position, direction, phase, map, title }: Props) {
+  const EARTH_RADIUS = 6378.137;
+  const PI = Math.PI;
+  const m = (1 / ((2 * PI / 360) * EARTH_RADIUS)) / 1000;
+  const COS = Math.cos;
   let latlng
 
   if (direction.includes("nt")) {
@@ -20,7 +21,7 @@ export default function placeSignal({ position, direction, phase, map }: Props) 
   }
 
   if (direction.includes("et")) {
-    const newLng = position.latlng.getLng() + (10 * m) / cos(position.latlng.getLat() * (pi / 180));
+    const newLng = position.latlng.getLng() + (10 * m) / COS(position.latlng.getLat() * (PI / 180));
     latlng = new window.kakao.maps.LatLng(position.latlng.getLat(), newLng);
   }
 
@@ -30,38 +31,46 @@ export default function placeSignal({ position, direction, phase, map }: Props) 
   }
 
   if (direction.includes("wt")) {
-    const newLng = position.latlng.getLng() + (-10 * m) / cos(position.latlng.getLat() * (pi / 180));
+    const newLng = position.latlng.getLng() + (-10 * m) / COS(position.latlng.getLat() * (PI / 180));
     latlng = new window.kakao.maps.LatLng(position.latlng.getLat(), newLng);
   }
 
   if (direction.includes("ne")) {
     const newLat = position.latlng.getLat() + (10 * m);
-    const newLng = position.latlng.getLng() + (10 * m) / cos(position.latlng.getLat() * (pi / 180));
+    const newLng = position.latlng.getLng() + (10 * m) / COS(position.latlng.getLat() * (PI / 180));
     latlng = new window.kakao.maps.LatLng(newLat, newLng);
   }
 
   if (direction.includes("nw")) {
     const newLat = position.latlng.getLat() + (10 * m);
-    const newLng = position.latlng.getLng() + (-10 * m) / cos(position.latlng.getLat() * (pi / 180));
+    const newLng = position.latlng.getLng() + (-10 * m) / COS(position.latlng.getLat() * (PI / 180));
     latlng = new window.kakao.maps.LatLng(newLat, newLng);
   }
 
   if (direction.includes("se")) {
     const newLat = position.latlng.getLat() + (-10 * m);
-    const newLng = position.latlng.getLng() + (10 * m) / cos(position.latlng.getLat() * (pi / 180));
+    const newLng = position.latlng.getLng() + (10 * m) / COS(position.latlng.getLat() * (PI / 180));
     latlng = new window.kakao.maps.LatLng(newLat, newLng);
   }
 
   if (direction.includes("sw")) {
     const newLat = position.latlng.getLat() + (-10 * m);
-    const newLng = position.latlng.getLng() + (-10 * m) / cos(position.latlng.getLat() * (pi / 180));
+    const newLng = position.latlng.getLng() + (-10 * m) / COS(position.latlng.getLat() * (PI / 180));
     latlng = new window.kakao.maps.LatLng(newLat, newLng);
   }
 
   const content = document.createElement("div");
   content.classList.add("signal");
+  
+  const contentInfo = document.createElement("span");
+  contentInfo.textContent = title;
+  contentInfo.classList.add("signal-info");
 
+  content.append(contentInfo);
+
+  // 여기서 on off classList add 해서 잔여 안남게 하기
   if (phase.includes("stop")) content.classList.add("off");
+  // else content.classList.add("on");
 
   const point = new window.kakao.maps.CustomOverlay({
     position: latlng,
