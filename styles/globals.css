@@ -90,15 +90,55 @@ table {
   margin: 15px;
   border-style: none;
   border-radius: 50%;
-  background: green;
   cursor: pointer;
   user-select: none;
+	background: green;
 
-  animation-name: greenLight;
+	animation-name: greenLight;
 	animation-duration: 1.5s;
 	animation-iteration-count: infinite;
 	animation-timing-function: linear;
 }
+
+.signal-info {
+	position: absolute;
+	background-color: #000;
+	color : #fff;
+	top : -40px;
+	text-align: center;
+	padding: 10px;
+	border-radius: 5px;
+	left: 50%;                    
+	transform: translateX(-50%);
+	opacity: 0;
+	transition: 0.5s;
+	visibility: hidden;          
+}
+
+.signal-info:after {
+	content : '';
+	position: absolute;
+	background-color:#000;
+	width : 10px;
+	height: 10px;
+	transform: rotate(45deg) translateX(-50%);
+	bottom: -5px;
+	left: 50%;
+}
+
+.signal:hover .signal-info{
+	opacity: 1;
+	visibility: visible;
+}
+
+/* .on {
+	background: green;
+
+	animation-name: greenLight;
+	animation-duration: 1.5s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+} */
 
 .off {
 	background: red;
