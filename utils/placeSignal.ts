@@ -68,9 +68,8 @@ export default function placeSignal({ position, direction, phase, map, title }: 
 
   content.append(contentInfo);
 
-  // 여기서 on off classList add 해서 잔여 안남게 하기
   if (phase.includes("stop")) content.classList.add("off");
-  // else content.classList.add("on");
+  else content.classList.add("on");
 
   const point = new window.kakao.maps.CustomOverlay({
     position: latlng,

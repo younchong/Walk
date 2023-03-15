@@ -92,12 +92,6 @@ table {
   border-radius: 50%;
   cursor: pointer;
   user-select: none;
-	background: green;
-
-	animation-name: greenLight;
-	animation-duration: 1.5s;
-	animation-iteration-count: infinite;
-	animation-timing-function: linear;
 }
 
 .signal-info {
@@ -131,14 +125,14 @@ table {
 	visibility: visible;
 }
 
-/* .on {
+.on {
 	background: green;
 
 	animation-name: greenLight;
 	animation-duration: 1.5s;
 	animation-iteration-count: infinite;
 	animation-timing-function: linear;
-} */
+}
 
 .off {
 	background: red;
