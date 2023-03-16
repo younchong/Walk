@@ -37,6 +37,12 @@ const getAroundLocationList = async (userPosition: UpdatedLocation) => {
 }
 
 const getSignalPhaseData = async () => {
+  if (process.env.NODE_ENV === "development") {
+    const response = signalPhaseData;
+
+    return response as unknown as SignalPhase[];
+  }
+
   const result = await fetch(process.env.NEXT_PUBLIC_SIGNAL_PHASE as string);
   const response: SignalPhase[] = await result.json();
 
@@ -44,6 +50,12 @@ const getSignalPhaseData = async () => {
 }
 
 const getSignalTimingData = async () => {
+  if (process.env.NODE_ENV === "development") {
+    const response = signalTimingData;
+
+    return response as unknown as SignalTiming[];
+  }
+
   const result = await fetch(process.env.NEXT_PUBLIC_SIGNAL_TIMING as string);
   const response: SignalTiming[] = await result.json();
 
