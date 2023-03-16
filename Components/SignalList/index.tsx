@@ -23,12 +23,11 @@ export const SignalList: FC<SignalListProps> = ({ map }) => {
   const setMapPosition = useSetRecoilState(mapPositionAtom);
   const [refetchIntervalTime, setRefetchIntervalTime] = useState<number | false>(90 * 1000);
   const [isActive, setIsActive] = useState<boolean>(false);
-  const [ranges, setRanges] = useState<RangesType>({
-    "0.5": true,
-    "1": false,
-    "1.5": false,
-    "2": false
-  });
+  const [ranges, setRanges] = useState<Map<AvailableRanges, boolean>>(new Map([
+    ["0.5", true],
+    ["1", false],
+    ["1.5", false],
+    ["2", false]]));
 
   const { data, refetch } = useQuery("aroundSignals", async() => {
     const updatedSinal: SignalInformation[] = await getSignalData(myPosition);
@@ -59,14 +58,15 @@ export const SignalList: FC<SignalListProps> = ({ map }) => {
     }
 
     setDistance(curRange);
-    setRanges(prev => {
-      const updatedRanges = {...prev};
+    setRanges(() => {
+      const updatedRanges = new Map<AvailableRanges, boolean>([
+        ["0.5", false],
+        ["1", false],
+        ["1.5", false],
+        ["2", false]]);
+      updatedRanges.set(curRange, true);
 
-      for (let range in prev) {
-        updatedRanges[range as AvailableRanges] = range === curRange ? true : false;
-      }
-
-      return updatedRanges as RangesType;
+      return updatedRanges;
     });
   }
 
@@ -85,18 +85,18 @@ export const SignalList: FC<SignalListProps> = ({ map }) => {
     setUpdatedTime(Date.now());
   }, [data]);
 
-  useEffect(() => {
-    if (!aroundSignals.length) return;
+  // useEffect(() => {
+  //   if (!aroundSignals.length) return;
 
-    aroundSignals.forEach((position: SignalTypes) => {
-      Object.keys(position.phase).forEach(direction => {
-        const title = position.title;
-        const phase = position.phase[direction];
+  //   aroundSignals.forEach((position: SignalTypes) => {
+  //     Object.keys(position.phase).forEach(direction => {
+  //       const title = position.title;
+  //       const phase = position.phase[direction];
 
-        placeSignal({position, direction, phase, map, title});
-      });
-    });
-  }, [aroundSignals]);
+  //       // placeSignal({position, direction, phase, map, title});
+  //     });
+  //   });
+  // }, [aroundSignals]);
 
   return (
     <ListContainer isActive={isActive}>
@@ -105,9 +105,8 @@ export const SignalList: FC<SignalListProps> = ({ map }) => {
         <ListHeader>
           <span>주변 정보</span>
           <RangesBox onClick={handleRange}>
-            {Object.keys(ranges).sort((a, b) => Number(a) - Number(b)).map(range => 
-            <RangeItem id={range} isClicked={ranges[range as AvailableRanges]} key={range}>{range}km</RangeItem>
-            )}
+            {Array.from(ranges, ([key, value]) => ({key, value})).map(({key, value}) => 
+            <RangeItem id={key} isClicked={value} key={key}>{key}km</RangeItem>)}
             <span id="me"></span>
           </RangesBox>
         </ListHeader>
