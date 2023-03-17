@@ -63,7 +63,7 @@ const getSignalTimingData = async () => {
 }
 
 const createSignalMap = (informations: SignalPhase[] | SignalTiming[]) => {
-  const filteredMap = new Map();
+  const filteredMap = new Map<string, SignalPhase | SignalTiming>();
 
   informations.forEach((information: SignalPhase | SignalTiming) => {
     filteredMap.set(information.itstId, information);
@@ -85,7 +85,7 @@ export default async function getAroundSignalInformation(
     const locationId = location.itstId;
 
     information.phase = signalPhaseMap.get(locationId) || null;
-    information.timing = signalTimingMap.get(locationId) || null;
+    information.timing = (signalTimingMap as Map<string, SignalTiming>).get(locationId) || null;
     
     return information;
   });

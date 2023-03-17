@@ -5,7 +5,6 @@ import { useRecoilState } from 'recoil';
 import { useQuery } from 'react-query';
 import SignalList from '../Components/SignalList';
 import { CreatedSignal, createSignals } from '../utils/createSignals';
-import getDistance from '../utils/getDistance';
 import getSignalData from '../utils/getSignalData';
 import placeSignal from '../utils/placeSignal';
 import removeSignals from '../utils/removeSignal';
@@ -19,7 +18,6 @@ import { initScript } from '../utils/initScript';
 const Home: NextPage = () => {
   const [myPosition, setMyPosition] = useRecoilState(myPositionState);
   const [mapPosition, setMapPosition] = useRecoilState(mapPositionAtom);
-  const [isMapMoving, setIsMapMoving] = useRecoilState(mapMovingAtom);
   const [mapAroundSignals, setMapAroundSignals] = useRecoilState(mapAroundSignalsAtom);
   const [mapLoaded, setMapLoaded] = useState<boolean>(false);
   const [map, setMap] = useState();
@@ -30,26 +28,7 @@ const Home: NextPage = () => {
   });
 
   useEffect(() => {
-    if (getDistance(myPosition, mapPosition) > 0.5) {
-      setIsMapMoving(true);
-    } else {
-      setIsMapMoving(false);
-    }
-  }, [mapPosition]);
-
-  useEffect(() => {
-    if (!isMapMoving) {
-      mapAroundSignals.length && removeSignals(mapAroundSignals);
-      setMapAroundSignals([]);
-
-      return;
-    }
-
-    refetch();
-  }, [isMapMoving, mapPosition]);
-
-  useEffect(() => {
-    if (!data || !data.length) return;
+    if (!data?.length) return;
 
     const signalsInfo = createSignals(data);
     const newPlacedSignals: any[] = []; // kakao Map point
@@ -71,8 +50,9 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (!mapLoaded) return;
 
-    initKakaoMap({ myPosition, setMap, setMapPosition });
-  }, [mapLoaded, myPosition.lat, myPosition.lng]);
+    initKakaoMap({ myPosition, setMap, setMapPosition, refetch });
+    refetch();
+  }, [mapLoaded, myPosition]);
 
   useEffect(() => {
     initScript({ setMapLoaded });
@@ -84,6 +64,7 @@ const Home: NextPage = () => {
         };
 
         setMyPosition(myPosition);
+        setMapPosition(myPosition);
     }, (err) => {
       alert('위치정보 사용 불가');
     });
