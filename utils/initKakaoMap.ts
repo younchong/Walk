@@ -1,6 +1,9 @@
 import { Dispatch, SetStateAction } from "react";
 import { SetterOrUpdater } from "recoil";
 import { debounce } from './debounce';
+import { QueryObserverResult } from 'react-query';
+import { SignalInformation } from '../pages/api/type';
+import getDistance from "./getDistance";
 
 type MapPositionType = {
   lat: number;
@@ -11,9 +14,10 @@ type MapProps = {
   myPosition: MapPositionType,
   setMap: Dispatch<SetStateAction<undefined>>,
   setMapPosition: SetterOrUpdater<MapPositionType>
+  refetch: () => Promise<QueryObserverResult<SignalInformation[] | [], unknown>>
 }
 
-export const initKakaoMap = ({ myPosition, setMap, setMapPosition }: MapProps) => {
+export const initKakaoMap = ({ myPosition, setMap, setMapPosition, refetch }: MapProps) => {
   new window.kakao.maps.load(() => {
     const container = document.querySelector("#map");
     const options = {
@@ -41,7 +45,11 @@ export const initKakaoMap = ({ myPosition, setMap, setMapPosition }: MapProps) =
         lng: center.getLng(),
       };
 
-      setMapPosition(position);
+      setMapPosition(prev => {
+        if (getDistance(prev, position) > 0.5) refetch();
+
+        return position;
+      });
     }, 1000);
 
     new window.kakao.maps.event.addListener(map, "idle", debouncedSetMapPosition);
