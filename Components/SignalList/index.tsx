@@ -8,24 +8,22 @@ import SignalDetail from '../SignalDetail';
 import { analyzeDirectionAndTime } from '../../utils/signalUtils';
 import mapPositionAtom from '../../recoil/mapPosition/atom';
 import myPositionState from '../../recoil/myPosition/atom';
-import updatedTimeAtom from '../../recoil/updatedTime/atom';
 import { listedSignalsAtom, distanceAtom, mapAroundSignalsAtom } from '../../recoil/aroundSignals/index';
-import { SignalListProps, RangesType, SignalTypes, AvailableRanges } from './type';
+import { SignalListProps, SignalTypes, AvailableRanges } from './type';
 import { List, ListContainer, ListHeader, ListMain, ListMarginTop, RangeItem, RangesBox, SignalRow, SignalTitle } from './style';
 import { SignalInformation } from "../../pages/api/type";
 import removeSignals from "../../utils/removeSignal";
-import mapMovingAtom from "../../recoil/mapMoving/atom";
 import getDistance from "../../utils/getDistance";
 
 export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
   const myPosition = useRecoilValue(myPositionState);
-  const setUpdatedTime = useSetRecoilState(updatedTimeAtom);
   const [listedSignals, setListedSignals] = useRecoilState<SignalTypes[]>(listedSignalsAtom);
   const setMapAroundSignals = useSetRecoilState(mapAroundSignalsAtom);
   const [selectedDistance, setSelectedDistance] = useRecoilState(distanceAtom);
   const [mapPostion, setMapPosition] = useRecoilState(mapPositionAtom);
   const [refetchIntervalTime, setRefetchIntervalTime] = useState<number | false>(90 * 1000);
   const [isActive, setIsActive] = useState<boolean>(false);
+  const [updatedTime, setUpdatedTime] = useState(Date.now());
   const [calculatedSignals, setCalculatedSignals] = useState(listedSignals);
   const [ranges, setRanges] = useState<Map<AvailableRanges, boolean>>(new Map([
     ["0.5", true],
@@ -80,8 +78,7 @@ export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
 
   useEffect(() => {
     const updatedSignals = listedSignals.filter((signal) => {
-      const updatedSignal: SignalTypes & {distance: number} = {...signal, distance: 0};
-
+      const updatedSignal: SignalTypes & {distance: number} = {...signal, distance: 3};
       const signalPosition = {
         lat: signal.latlng.Ma,
         lng: signal.latlng.La
@@ -90,15 +87,12 @@ export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
       const distance = getDistance(position, signalPosition);
       updatedSignal.distance = distance;
 
-      if (distance <= selectedDistance) return updatedSignal;
+      if (distance <= Number(selectedDistance)) return updatedSignal;
     });
-    
-    (updatedSignals as (SignalTypes & {distance: number})[]).sort((a, b) => a.distance - b.distance);
 
+    (updatedSignals as (SignalTypes & {distance: number})[]).sort((a, b) => a.distance - b.distance);
     setCalculatedSignals(updatedSignals);
   }, [listedSignals, selectedDistance]);
-
-  
 
   useEffect(() => {
     if (!data?.length) return;
@@ -134,9 +128,10 @@ export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
         <ListHeader>
           <span>주변 정보</span>
           {isMapMoving && <span id="me"></span>}
-          {!isMapMoving && <RangesBox>
+          {!isMapMoving && 
+          <RangesBox>
             {Array.from(ranges, ([key, value]) => ({key, value})).map(({key, value}) => 
-            <RangeItem id={key} isClicked={value} key={key}>{key}km</RangeItem>)}
+              <RangeItem id={key} isClicked={value} key={key}>{key}km</RangeItem>)}
             <span id="me"></span>
           </RangesBox>}
         </ListHeader>
@@ -144,9 +139,8 @@ export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
           {isLoading ?
             <SignalRow> Loading...</SignalRow> :
             calculatedSignals.map((signal: SignalTypes, index) => {
-              console.log(signal);
-              if 
-              (!Object.keys(signal.phase).length) return null;
+              if (!Object.keys(signal.phase).length) return null;
+
               return (
                 <SignalRow key={signal.latlng.Ma + signal.latlng.La + index} onClick={() => {
                   const moveLatLng = new window.kakao.maps.LatLng(signal.latlng.Ma, signal.latlng.La);   
@@ -157,7 +151,7 @@ export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
                     const [dir, time] = analyzeDirectionAndTime(direction, signal.timing);
 
                     return (
-                      <SignalDetail direction={dir} phase={signal.phase[direction]} timing={time} key={direction}/>
+                      <SignalDetail updatedTime={updatedTime} direction={dir} phase={signal.phase[direction]} timing={time} key={direction}/>
                     );
                   })}
                 </SignalRow>
