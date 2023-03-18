@@ -14,10 +14,9 @@ type MapProps = {
   myPosition: MapPositionType,
   setMap: Dispatch<SetStateAction<undefined>>,
   setMapPosition: SetterOrUpdater<MapPositionType>
-  refetch: () => Promise<QueryObserverResult<SignalInformation[] | [], unknown>>
 }
 
-export const initKakaoMap = ({ myPosition, setMap, setMapPosition, refetch }: MapProps) => {
+export const initKakaoMap = ({ myPosition, setMap, setMapPosition }: MapProps) => {
   new window.kakao.maps.load(() => {
     const container = document.querySelector("#map");
     const options = {
@@ -45,11 +44,7 @@ export const initKakaoMap = ({ myPosition, setMap, setMapPosition, refetch }: Ma
         lng: center.getLng(),
       };
 
-      setMapPosition(prev => {
-        if (getDistance(prev, position) > 0.5) refetch();
-
-        return position;
-      });
+      setMapPosition(position);
     }, 1000);
 
     new window.kakao.maps.event.addListener(map, "idle", debouncedSetMapPosition);

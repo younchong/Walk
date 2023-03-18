@@ -1,6 +1,4 @@
-import { aroundSignalsAtom, distanceAtom, mapAroundSignalsAtom } from "./atom";
-import signalWithCalculatedDistance from "./withCalculated"
+import { listedSignalsAtom, distanceAtom, mapAroundSignalsAtom } from "./atom";
 
-export { signalWithCalculatedDistance, distanceAtom, mapAroundSignalsAtom };
+export { listedSignalsAtom, distanceAtom, mapAroundSignalsAtom };
 
-export default aroundSignalsAtom;
