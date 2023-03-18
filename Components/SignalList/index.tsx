@@ -1,36 +1,40 @@
 import React, { FC, useEffect, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState, useRecoilState } from 'recoil';
 import { useQuery } from 'react-query';
 import placeSignal from '../../utils/placeSignal';
 import getSignalData from '../../utils/getSignalData';
-import { createSignals } from '../../utils/createSignals';
+import { createSignals, CreatedSignal } from '../../utils/createSignals';
 import SignalDetail from '../SignalDetail';
 import { analyzeDirectionAndTime } from '../../utils/signalUtils';
 import mapPositionAtom from '../../recoil/mapPosition/atom';
 import myPositionState from '../../recoil/myPosition/atom';
 import updatedTimeAtom from '../../recoil/updatedTime/atom';
-import aroundSignalsAtom, { signalWithCalculatedDistance, distanceAtom } from '../../recoil/aroundSignals/index';
+import { listedSignalsAtom, distanceAtom, mapAroundSignalsAtom } from '../../recoil/aroundSignals/index';
 import { SignalListProps, RangesType, SignalTypes, AvailableRanges } from './type';
 import { List, ListContainer, ListHeader, ListMain, ListMarginTop, RangeItem, RangesBox, SignalRow, SignalTitle } from './style';
 import { SignalInformation } from "../../pages/api/type";
+import removeSignals from "../../utils/removeSignal";
+import mapMovingAtom from "../../recoil/mapMoving/atom";
+import getDistance from "../../utils/getDistance";
 
-export const SignalList: FC<SignalListProps> = ({ map }) => {
+export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
   const myPosition = useRecoilValue(myPositionState);
-  const aroundSignals = useRecoilValue(signalWithCalculatedDistance);
   const setUpdatedTime = useSetRecoilState(updatedTimeAtom);
-  const setAroundSignals = useSetRecoilState<SignalTypes[]>(aroundSignalsAtom);
-  const setDistance = useSetRecoilState(distanceAtom);
-  const setMapPosition = useSetRecoilState(mapPositionAtom);
+  const [listedSignals, setListedSignals] = useRecoilState<SignalTypes[]>(listedSignalsAtom);
+  const setMapAroundSignals = useSetRecoilState(mapAroundSignalsAtom);
+  const [selectedDistance, setSelectedDistance] = useRecoilState(distanceAtom);
+  const [mapPostion, setMapPosition] = useRecoilState(mapPositionAtom);
   const [refetchIntervalTime, setRefetchIntervalTime] = useState<number | false>(90 * 1000);
   const [isActive, setIsActive] = useState<boolean>(false);
+  const [calculatedSignals, setCalculatedSignals] = useState(listedSignals);
   const [ranges, setRanges] = useState<Map<AvailableRanges, boolean>>(new Map([
     ["0.5", true],
     ["1", false],
     ["1.5", false],
     ["2", false]]));
 
-  const { data, refetch } = useQuery("aroundSignals", async() => {
-    const updatedSinal: SignalInformation[] = await getSignalData(myPosition);
+  const { data, refetch, isLoading } = useQuery("listedSignals", async() => {
+    const updatedSinal: SignalInformation[] = await getSignalData(isMapMoving ? mapPostion : myPosition);
     
     return updatedSinal;
     },
@@ -42,7 +46,7 @@ export const SignalList: FC<SignalListProps> = ({ map }) => {
     }
   );
 
-  const handleRange = (e: React.BaseSyntheticEvent) => {
+  const clickList = (e: React.BaseSyntheticEvent) => {
     const curRange = e.target.id;
 
     if (!curRange) return;
@@ -57,7 +61,7 @@ export const SignalList: FC<SignalListProps> = ({ map }) => {
       return;
     }
 
-    setDistance(curRange);
+    setSelectedDistance(curRange);
     setRanges(() => {
       const updatedRanges = new Map<AvailableRanges, boolean>([
         ["0.5", false],
@@ -72,7 +76,29 @@ export const SignalList: FC<SignalListProps> = ({ map }) => {
 
   useEffect(() => {
     refetch();
-  }, [myPosition]);
+  }, [myPosition, mapPostion]);
+
+  useEffect(() => {
+    const updatedSignals = listedSignals.filter((signal) => {
+      const updatedSignal: SignalTypes & {distance: number} = {...signal, distance: 0};
+
+      const signalPosition = {
+        lat: signal.latlng.Ma,
+        lng: signal.latlng.La
+      };
+      const position = isMapMoving ? mapPostion : myPosition;
+      const distance = getDistance(position, signalPosition);
+      updatedSignal.distance = distance;
+
+      if (distance <= selectedDistance) return updatedSignal;
+    });
+    
+    (updatedSignals as (SignalTypes & {distance: number})[]).sort((a, b) => a.distance - b.distance);
+
+    setCalculatedSignals(updatedSignals);
+  }, [listedSignals, selectedDistance]);
+
+  
 
   useEffect(() => {
     if (!data?.length) return;
@@ -80,47 +106,58 @@ export const SignalList: FC<SignalListProps> = ({ map }) => {
     !refetchIntervalTime && setRefetchIntervalTime(90 * 1000);
 
     const signalsInfo = createSignals(data);
-    // 여기서 거리 정보 추가 현재 위치로부터.
-    setAroundSignals(signalsInfo);
+    const newPlacedSignals: any[] = []; // kakao Map point
+
+    signalsInfo.forEach((position: CreatedSignal) => {
+      Object.keys(position.phase).forEach(direction => {
+        const title = position.title;
+        const phase = position.phase[direction];
+        const point = placeSignal({position, direction, phase, title});
+
+        newPlacedSignals.push(point);
+      });
+    });
+
+    setListedSignals(signalsInfo);
+    setMapAroundSignals(prev =>{
+      if (prev.length) removeSignals(prev);
+      
+      return newPlacedSignals;
+    });
     setUpdatedTime(Date.now());
   }, [data]);
 
-  // useEffect(() => {
-  //   if (!aroundSignals.length) return;
-
-  //   aroundSignals.forEach((position: SignalTypes) => {
-  //     Object.keys(position.phase).forEach(direction => {
-  //       const title = position.title;
-  //       const phase = position.phase[direction];
-
-  //       // placeSignal({position, direction, phase, map, title});
-  //     });
-  //   });
-  // }, [aroundSignals]);
-
   return (
     <ListContainer isActive={isActive}>
-      <ListMarginTop hasSignals={aroundSignals.length ? true : false}/>
-      <List onMouseOver={() => {setIsActive(true)}} onMouseOut={() => {setIsActive(false)}} >
+      <ListMarginTop hasSignals={calculatedSignals.length ? true : false}/>
+      <List onMouseOver={() => {setIsActive(true)}} onMouseOut={() => {setIsActive(false)}} onClick={clickList}>
         <ListHeader>
           <span>주변 정보</span>
-          <RangesBox onClick={handleRange}>
+          {isMapMoving && <span id="me"></span>}
+          {!isMapMoving && <RangesBox>
             {Array.from(ranges, ([key, value]) => ({key, value})).map(({key, value}) => 
             <RangeItem id={key} isClicked={value} key={key}>{key}km</RangeItem>)}
             <span id="me"></span>
-          </RangesBox>
+          </RangesBox>}
         </ListHeader>
         <ListMain>
-          {
-            aroundSignals.map((signal: SignalTypes, index) => {
+          {isLoading ?
+            <SignalRow> Loading...</SignalRow> :
+            calculatedSignals.map((signal: SignalTypes, index) => {
+              console.log(signal);
+              if 
+              (!Object.keys(signal.phase).length) return null;
               return (
-                <SignalRow key={signal.latlng.Ma + signal.latlng.La + index}>
+                <SignalRow key={signal.latlng.Ma + signal.latlng.La + index} onClick={() => {
+                  const moveLatLng = new window.kakao.maps.LatLng(signal.latlng.Ma, signal.latlng.La);   
+                  map.panTo(moveLatLng);
+                }}>
                   <SignalTitle key={signal.title}>{signal.title}</SignalTitle>
                   {Object.keys(signal.phase).map(direction => {
                     const [dir, time] = analyzeDirectionAndTime(direction, signal.timing);
 
                     return (
-                        <SignalDetail direction={dir} phase={signal.phase[direction]} timing={time} key={direction}/>
+                      <SignalDetail direction={dir} phase={signal.phase[direction]} timing={time} key={direction}/>
                     );
                   })}
                 </SignalRow>

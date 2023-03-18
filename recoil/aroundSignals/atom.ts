@@ -1,8 +1,8 @@
 import { atom } from "recoil";
 import { SignalTypes } from '../../Components/SignalList/type';
 
-const aroundSignalsAtom = atom<SignalTypes[]>({
-  key: "aroundSignals",
+const listedSignalsAtom = atom<SignalTypes[]>({
+  key: "listedSignals",
   default: [],
   dangerouslyAllowMutability: true,
 });
@@ -18,4 +18,5 @@ const mapAroundSignalsAtom = atom<any[]>({
   dangerouslyAllowMutability: true,
 });
 
-export { aroundSignalsAtom, distanceAtom, mapAroundSignalsAtom };
+
+export { listedSignalsAtom, distanceAtom, mapAroundSignalsAtom };

@@ -75,4 +75,5 @@ export const SignalTitle = styled.span`
   margin-right: 1rem;
   font-size: 1.7rem;
   font-weight: 500;
+  cursor: pointer;
 `;

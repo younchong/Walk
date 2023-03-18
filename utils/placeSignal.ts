@@ -3,12 +3,11 @@ import { CreatedSignal } from "./createSignals";
 type Props = {
   position: CreatedSignal,
   direction: string,
-  phase: string, 
-  map: any,
+  phase: string,
   title: string,
 }
 
-export default function placeSignal({ position, direction, phase, map, title }: Props) {
+export default function placeSignal({ position, direction, phase, title }: Props) {
   const EARTH_RADIUS = 6378.137;
   const PI = Math.PI;
   const m = (1 / ((2 * PI / 360) * EARTH_RADIUS)) / 1000;
@@ -73,11 +72,8 @@ export default function placeSignal({ position, direction, phase, map, title }: 
 
   const point = new window.kakao.maps.CustomOverlay({
     position: latlng,
-    content,
-    map,
+    content
   });
-
-  point.setMap(map);
 
   return point;
 }

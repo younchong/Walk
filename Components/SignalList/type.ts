@@ -14,11 +14,12 @@ export type SignalTypes = {
   title: string,
   timing: {[index: string]: number},
   phase: {[index: string]: string},
-  latlng: {La: number, Ma: number}
+  latlng: {La: number, Ma: number},
 }
 
 export type SignalListProps = {
-  map: any
+  map: any;
+  isMapMoving: boolean;
 }
 
 export type AvailableRanges = "0.5" | "1" | "1.5" | "2";
