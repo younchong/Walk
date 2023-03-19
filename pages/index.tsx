@@ -23,7 +23,7 @@ const Home: NextPage = () => {
     mapAroundSignals.forEach((signal) => {
       signal.setMap(map);
     });
-  }, [mapAroundSignals])
+  }, [mapAroundSignals]);
 
   useEffect(() => {
     if (getDistance(mapPosition, myPosition) > 2) {
