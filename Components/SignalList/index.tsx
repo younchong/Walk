@@ -33,7 +33,7 @@ export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
 
   const { data, refetch, isLoading } = useQuery("listedSignals", async() => {
     const updatedSinal: SignalInformation[] = await getSignalData(isMapMoving ? mapPostion : myPosition);
-    
+
     return updatedSinal;
     },
     {
@@ -74,7 +74,12 @@ export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
 
   useEffect(() => {
     refetch();
-  }, [myPosition, mapPostion]);
+  }, [myPosition, isMapMoving]);
+
+  useEffect(() => {
+    if (!isMapMoving) return;
+    refetch();
+  }, [mapPostion]);
 
   useEffect(() => {
     const updatedSignals = listedSignals.filter((signal) => {
