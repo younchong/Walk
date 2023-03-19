@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState, useRecoilState } from 'recoil';
 import { useQuery } from 'react-query';
 import placeSignal from '../../utils/placeSignal';
@@ -44,7 +44,7 @@ export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
     }
   );
 
-  const clickList = (e: React.BaseSyntheticEvent) => {
+  const memoOnClickList = useCallback((map: any, e: React.BaseSyntheticEvent) => {
     const curRange = e.target.id;
 
     if (!curRange) return;
@@ -70,7 +70,12 @@ export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
 
       return updatedRanges;
     });
-  }
+  }, [myPosition, map]);
+
+  const memoOnClickSignalRow = useCallback((signal: SignalTypes, map: any) => {
+    const moveLatLng = new window.kakao.maps.LatLng(signal.latlng.Ma, signal.latlng.La);   
+    map.panTo(moveLatLng);
+  }, [map]);
 
   useEffect(() => {
     refetch();
@@ -129,7 +134,7 @@ export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
   return (
     <ListContainer isActive={isActive}>
       <ListMarginTop hasSignals={calculatedSignals.length ? true : false}/>
-      <List onMouseOver={() => {setIsActive(true)}} onMouseOut={() => {setIsActive(false)}} onClick={clickList}>
+      <List onMouseOver={() => {setIsActive(true)}} onMouseOut={() => {setIsActive(false)}} onClick={memoOnClickList.bind(null, map)}>
         <ListHeader>
           <span>주변 정보</span>
           {isMapMoving && <span id="me"></span>}
@@ -147,10 +152,7 @@ export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
               if (!Object.keys(signal.phase).length) return null;
 
               return (
-                <SignalRow key={signal.latlng.Ma + signal.latlng.La + index} onClick={() => {
-                  const moveLatLng = new window.kakao.maps.LatLng(signal.latlng.Ma, signal.latlng.La);   
-                  map.panTo(moveLatLng);
-                }}>
+                <SignalRow key={signal.latlng.Ma + signal.latlng.La + index} onClick={memoOnClickSignalRow.bind(null, signal, map)}>
                   <SignalTitle key={signal.title}>{signal.title}</SignalTitle>
                   {Object.keys(signal.phase).map(direction => {
                     const [dir, time] = analyzeDirectionAndTime(direction, signal.timing);
