@@ -1,8 +1,24 @@
 import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 
+export const Container = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+`;
+
+export const TextBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 2rem;
+  font-weight: 700;
+`;
+
 export const WalkingMan = styled.div`
-  width: 30px;
+  position: absolute;
+  width: 100%;
 	height: 20px;
 	text-align: center;
 `;
@@ -18,7 +34,7 @@ export const Manhead = styled.p`
 	border-radius: 50%;
 	background: #000;
 	position: absolute;
-	margin-top: 25px;
+	margin-top: 0px;
 	margin-left: -5px;
 `;
 
@@ -27,7 +43,7 @@ export const Middlepart = styled.p`
 	height: 20px;
 	width: 5px;
 	position: absolute;
-	margin-top: 38px;
+	margin-top: 13px;
 	margin-left: -5px;
 	border-radius: 100%;
   transform: scale(2.2,1.3) skewY(-30deg);
@@ -36,8 +52,21 @@ export const Middlepart = styled.p`
 `;
 
 const ManBodyMoving = keyframes`
-  0% {margin-left:0%;}
-  100% {margin-left:200%;}
+  0% {
+    margin-left: 10%;
+    transform: scaleX(1);
+  }
+  50% {
+    margin-left: 90%;
+    transform: scaleX(1);
+  }
+  51% {
+    transform: scaleX(-1);
+  }
+  100% {
+    margin-left: 10%;
+    transform: scaleX(-1);
+  }
 `;
 
 const movement1 = keyframes`
@@ -60,14 +89,14 @@ const movement2 = keyframes`
 
 
 export const ManBody = styled.div`
-  margin-left:350px;
-  animation: ${ManBodyMoving} 3s infinite slidein alternate;
-  -webkit-animation: ${ManBodyMoving} 3s infinite ease-in;
-  -moz-animation: ${ManBodyMoving} 3s infinite ease-in;
+width: 10px;
+  animation:  ${ManBodyMoving} 7s infinite ease-in-out;
+  -webkit-animation: ${ManBodyMoving} 7s infinite ease-out;
+  -moz-animation: ${ManBodyMoving} 7s infinite ease-out;
 `;
 
 export const LHand = styled.p`
-  margin-top: 38px;
+  margin-top: 13px;
 	margin-left: -5px;
 	height: 25px;
 	width: 3px;
@@ -94,7 +123,7 @@ export const LHand = styled.p`
 `;
 
 export const RHand = styled.p`
-  margin-top: 38px;
+  margin-top: 13px;
 	margin-left: -5px;
 	height: 25px;
 	width: 3px;
@@ -121,7 +150,7 @@ export const RHand = styled.p`
 `;
 
 export const LLeg = styled.p`
-  margin-top: 60px;
+  margin-top: 35px;
 	margin-left: -5px;
 	height: 25px;
 	width: 3px;
@@ -131,9 +160,9 @@ export const LLeg = styled.p`
   transform-origin: 0 0;
     -webkit-transform-origin: 0 0;
     -moz-transform-origin: 0 0;
-    animation: movement2 0.5s alternate infinite ease-out;
-    -webkit-animation: movement2 0.5s alternate infinite ease-out;
-    -moz-animation: movement2 0.5s alternate infinite ease-out;
+    animation: ${movement2} 0.5s alternate infinite ease-out;
+    -webkit-animation: ${movement2} 0.5s alternate infinite ease-out;
+    -moz-animation: ${movement2} 0.5s alternate infinite ease-out;
 
   &:after {
     content: '';
@@ -147,7 +176,7 @@ export const LLeg = styled.p`
 `;
 
 export const RLeg = styled.p`
-  margin-top: 60px;
+  margin-top: 35px;
 	margin-left: -5px;
 	height: 25px;
 	width: 3px;

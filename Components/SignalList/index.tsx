@@ -14,6 +14,7 @@ import { List, ListContainer, ListHeader, ListMain, ListMarginTop, RangeItem, Ra
 import { SignalInformation } from "../../pages/api/type";
 import removeSignals from "../../utils/removeSignal";
 import getDistance from "../../utils/getDistance";
+import { LoadingSpinner } from "../LoadingSpinner";
 
 export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
   const myPosition = useRecoilValue(myPositionState);
@@ -44,6 +45,19 @@ export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
     }
   );
 
+  useEffect(() => {
+    setRanges(() => {
+      const updatedRanges = new Map<AvailableRanges, boolean>([
+        ["0.5", false],
+        ["1", false],
+        ["1.5", false],
+        ["2", false]]);
+      updatedRanges.set(selectedDistance, true);
+
+      return updatedRanges;
+    });
+  }, [selectedDistance]);
+
   const memoOnClickList = useCallback((map: any, e: React.BaseSyntheticEvent) => {
     const curRange = e.target.id;
 
@@ -56,20 +70,11 @@ export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
 
       map.panTo(new window.kakao.maps.LatLng(myPosition.lat, myPosition.lng));
       setMapPosition(position);
+      setSelectedDistance("0.5");
       return;
     }
 
     setSelectedDistance(curRange);
-    setRanges(() => {
-      const updatedRanges = new Map<AvailableRanges, boolean>([
-        ["0.5", false],
-        ["1", false],
-        ["1.5", false],
-        ["2", false]]);
-      updatedRanges.set(curRange, true);
-
-      return updatedRanges;
-    });
   }, [myPosition, map]);
 
   const memoOnClickSignalRow = useCallback((signal: SignalTypes, map: any) => {
@@ -88,6 +93,11 @@ export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
 
   useEffect(() => {
     const updatedSignals = listedSignals.filter((signal) => {
+      const phase = Object.keys(signal.phase);
+      const timing = Object.keys(signal.timing);
+
+      if (!phase.length && !timing.length) return;
+
       const updatedSignal: SignalTypes & {distance: number} = {...signal, distance: 3};
       const signalPosition = {
         lat: signal.latlng.Ma,
@@ -146,8 +156,7 @@ export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
           </RangesBox>}
         </ListHeader>
         <ListMain>
-          {isLoading ?
-            <SignalRow> Loading...</SignalRow> :
+          {calculatedSignals.length ?
             calculatedSignals.map((signal: SignalTypes, index) => {
               if (!Object.keys(signal.phase).length) return null;
 
@@ -164,6 +173,10 @@ export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
                 </SignalRow>
               )
             })
+            :
+            <SignalRow>
+              <LoadingSpinner text="No Data 🥲"/>
+            </SignalRow>
           }
         </ListMain>
       </List>

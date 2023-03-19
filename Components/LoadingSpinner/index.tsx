@@ -1,10 +1,15 @@
-import { Manhead, Middlepart, Torso, WalkingMan, ManBody, LHand, RHand, LLeg, RLeg } from './style';
+import { Manhead, Middlepart, Torso, WalkingMan, ManBody, LHand, RHand, LLeg, RLeg, Container, TextBox } from './style';
 
-function LoadingSpinner() {
+type Props = {
+  text?: string;
+}
+
+function LoadingSpinner({ text }: Props) {
 
   return (
-    <WalkingMan>
-      <ManBody>
+    <Container>
+      <WalkingMan>
+        <ManBody>
           <Torso>
             <Manhead/>
               <Middlepart />
@@ -13,8 +18,12 @@ function LoadingSpinner() {
           </Torso>
           <LLeg />
           <RLeg />
-      </ManBody>
-    </WalkingMan>
+        </ManBody>
+      </WalkingMan>
+      <TextBox>
+        {text}
+      </TextBox>
+    </Container>
   )
 }
 
