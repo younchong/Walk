@@ -15,6 +15,7 @@ import { SignalInformation } from "../../pages/api/type";
 import removeSignals from "../../utils/removeSignal";
 import getDistance from "../../utils/getDistance";
 import { LoadingSpinner } from "../LoadingSpinner";
+import { RefetchBtn } from "../RefetchBtn";
 
 export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
   const myPosition = useRecoilValue(myPositionState);
@@ -22,7 +23,6 @@ export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
   const setMapAroundSignals = useSetRecoilState(mapAroundSignalsAtom);
   const [selectedDistance, setSelectedDistance] = useRecoilState(distanceAtom);
   const [mapPostion, setMapPosition] = useRecoilState(mapPositionAtom);
-  const [refetchIntervalTime, setRefetchIntervalTime] = useState<number | false>(90 * 1000);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [updatedTime, setUpdatedTime] = useState(Date.now());
   const [calculatedSignals, setCalculatedSignals] = useState(listedSignals);
@@ -37,12 +37,6 @@ export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
 
     return updatedSinal;
     },
-    {
-      refetchInterval: refetchIntervalTime,
-      onSuccess: ( data ) => {
-        if (!data.length) setRefetchIntervalTime(false);
-      },
-    }
   );
 
   useEffect(() => {
@@ -117,8 +111,6 @@ export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
   useEffect(() => {
     if (!data?.length) return;
 
-    !refetchIntervalTime && setRefetchIntervalTime(90 * 1000);
-
     const signalsInfo = createSignals(data);
     const newPlacedSignals: any[] = []; // kakao Map point
 
@@ -143,16 +135,22 @@ export const SignalList: FC<SignalListProps> = ({ map, isMapMoving }) => {
 
   return (
     <ListContainer isActive={isActive}>
-      <ListMarginTop hasSignals={calculatedSignals.length ? true : false}/>
+      <ListMarginTop hasSignals={!isLoading}/>
       <List onMouseOver={() => {setIsActive(true)}} onMouseOut={() => {setIsActive(false)}} onClick={memoOnClickList.bind(null, map)}>
         <ListHeader>
           <span>주변 정보</span>
-          {isMapMoving && <span id="me"></span>}
+          {isMapMoving && 
+          <>
+            <span id="me"></span>
+            <RefetchBtn refetch={refetch} />
+          </>
+          }
           {!isMapMoving && 
           <RangesBox>
             {Array.from(ranges, ([key, value]) => ({key, value})).map(({key, value}) => 
               <RangeItem id={key} isClicked={value} key={key}>{key}km</RangeItem>)}
             <span id="me"></span>
+            <RefetchBtn refetch={refetch} />
           </RangesBox>}
         </ListHeader>
         <ListMain>
