@@ -5,13 +5,13 @@ export const Container = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-`;
 
-export const TextBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
 
+export const TextBox = styled.div`
   font-size: 2rem;
   font-weight: 700;
 `;
@@ -20,7 +20,6 @@ export const WalkingMan = styled.div`
   position: absolute;
   width: 100%;
 	height: 20px;
-	text-align: center;
 `;
 
 export const Torso = styled.div`
@@ -89,10 +88,10 @@ const movement2 = keyframes`
 
 
 export const ManBody = styled.div`
-width: 10px;
-  animation:  ${ManBodyMoving} 7s infinite ease-in-out;
-  -webkit-animation: ${ManBodyMoving} 7s infinite ease-out;
-  -moz-animation: ${ManBodyMoving} 7s infinite ease-out;
+  width: 10px;
+  animation:  ${ManBodyMoving} 12s infinite ease-in-out;
+  -webkit-animation: ${ManBodyMoving} 12s infinite ease-out;
+  -moz-animation: ${ManBodyMoving} 12s infinite ease-out;
 `;
 
 export const LHand = styled.p`
