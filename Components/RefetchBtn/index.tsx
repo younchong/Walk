@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { Container, Spinner, Text } from "./style";
+import { debounce } from '../../utils/debounce';
 
 type Props = {
   refetch: () => void;
@@ -9,11 +10,11 @@ function RefetchBtn({ refetch }: Props) {
   const [refetchTime, setRefetchTime] = useState<number>(60);
   const [isActive, setIsActive] = useState<boolean>(false);
 
-  const MemoOnClickRefetch = useCallback(() => {
+  const MemoOnClickRefetch = useCallback(debounce(() => {
     refetch();
     setIsActive(true);
     setRefetchTime(60);
-  }, []);
+  }, 1000), []);
 
   useEffect(() => {
     if (!isActive) return;
