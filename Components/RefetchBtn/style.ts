@@ -7,6 +7,10 @@ export const Container = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
+
+  &:active {
+    background-color: transparent;
+  }
 `;
 
 const rotation = keyframes`
@@ -42,5 +46,3 @@ export const Text = styled.div`
   font-size: 1rem;
   font-weight: 600;
 `;
-
-
